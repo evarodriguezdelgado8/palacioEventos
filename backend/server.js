@@ -1,16 +1,26 @@
-// Importar el módulo de Express
 import express from "express";
-// Crear una instancia de la aplicación Express
+import db from "./db.js";
+
 const app = express();
-// Middleware para poder procesar datos en formato JSON
 app.use(express.json());
-// Definir una ruta básica (endpoint) de prueba
+
+// Ruta de prueba
 app.get("/", (req, res) => {
   res.send("🚀 Servidor Express funcionando correctamente");
 });
-// Definir el puerto donde escuchará el servidor
+
+// Ruta usando MySQL
+app.get("/usuarios", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM usuarios");
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const PORT = 3000;
-// Iniciar el servidor y escuchar peticiones en el puerto definido
+
 app.listen(PORT, () => {
   console.log(`✅ Servidor en ejecución: http://localhost:${PORT}`);
 });
