@@ -1,0 +1,706 @@
+// styles.scss
+
+// 1. Importar variables
+@import 'variables'; 
+
+
+// ----------------------------------------------------
+// Estilos generales
+// ----------------------------------------------------
+
+html {
+    font-size: 62.5%; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+    
+    font-family: $fuente-principal;
+    font-size: 1.6rem; 
+    line-height: 1.6;
+    color: $color-texto-oscuro;
+    background-color: $color-fondo-claro;
+    padding-top: $padding-cuerpo; 
+}
+
+
+// ----------------------------------------------------
+// Header
+// ----------------------------------------------------
+
+header {
+    background-color: $color-primario;
+    padding: $espacio-s 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1); 
+}
+
+.header-container {
+    max-width: 100%; 
+    margin: 0 auto;
+    padding: 0 $espacio-m;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        img {
+            // Logo ensanchado
+            width: 7rem; 
+            height: auto; 
+            filter: brightness(0) invert(1);
+        }
+    }
+
+    .logo-text {
+        color: $color-fondo-claro;
+        font-size: 1.4rem; 
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .user-menu {
+        background-color: $color-fondo-claro;
+        padding: $espacio-xs $espacio-s;
+        border-radius: 0.5rem; 
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: $espacio-xs;
+        transition: $transicion-default;
+
+        &:hover {
+            background-color: $color-gris-claro-hover;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+// Navegación
+// ----------------------------------------------------
+
+nav {
+    background-color: $color-secundario;
+    padding: 1.2rem 0; 
+    position: fixed;
+    // Acoplamiento perfecto al Header (85px)
+    top: $altura-header; 
+    width: 100%;
+    z-index: 999;
+
+    .nav-container {
+        max-width: 100%; 
+        margin: 0 auto;
+        padding: 0 $espacio-m; 
+        display: flex;
+        justify-content: center;
+        gap: $espacio-l;
+        flex-wrap: wrap;
+    }
+
+    a {
+        color: $color-primario;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.3rem; 
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: $espacio-xs $espacio-s;
+        border-radius: 0.3rem; 
+        transition: $transicion-default;
+
+        &:hover {
+            background-color: $color-primario;
+            color: $color-fondo-claro;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+// Contenedor principal y Secciones
+// ----------------------------------------------------
+
+.main-container {
+    flex-grow: 1; 
+    max-width: 100%; 
+    margin: 0 auto;
+    padding: $espacio-l $espacio-m;
+}
+
+.principal {
+    text-align: center;
+    margin-bottom: 6rem;
+
+    h1 {
+        font-size: 4.8rem;
+        color: $color-primario;
+        margin-bottom: $espacio-s;
+    }
+
+    h2 {
+        font-size: 2.8rem;
+        color: $color-texto-oscuro;
+        margin-bottom: 3rem;
+    }
+
+    .principal-imagen {
+        max-width: 100rem;
+        margin: 0 auto 3rem; 
+        border-radius: 1rem; 
+        box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.15);
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 1rem; 
+        }
+    }
+}
+
+.descripcion {
+    text-align: center;
+    line-height: 1.8;
+    color: $color-texto-oscuro;
+    max-width: 80rem;
+    margin: 0 auto 5rem;
+    padding: 3rem 2rem;
+    background-color: $color-fondo-gris-claro;
+    border-radius: $radio-default;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    
+    p {
+        margin-bottom: 1.5rem;
+        font-size: 1.6rem;
+    }
+
+    // Primer párrafo destacado
+    p:first-of-type {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: $color-primario;
+    }
+}
+
+
+// ----------------------------------------------------
+// Grid de salas
+// ----------------------------------------------------
+
+.salas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $espacio-l;
+    margin-bottom: 6rem; 
+
+    .sala-tarjeta {
+        text-align: center;
+        transition: $transicion-default;
+
+        &:hover {
+            transform: translateY(-0.5rem); 
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        img {
+            width: 100%;
+            height: 30rem;
+            object-fit: cover;
+            border-radius: $radio-default;
+            box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.15); 
+            margin-bottom: $espacio-m;
+        }
+
+        h3 {
+            font-size: 2.2rem; 
+            color: $color-primario;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+// Sección de eventos (Anidamiento y Hover)
+// ----------------------------------------------------
+
+.eventos-section {
+    margin-bottom: 6rem; 
+
+    h2 {
+        text-align: center;
+        font-size: 3.2rem; 
+        color: $color-texto-oscuro;
+        margin-bottom: $espacio-l;
+    }
+
+    .eventos-categoria {
+        margin-bottom: 5rem; 
+
+        h3 {
+            text-align:center;
+            font-size: 1.8rem; 
+            margin-bottom: 5%;
+            color: $color-texto-oscuro;
+        }
+    }
+
+    .eventos-gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: $espacio-m;
+
+        img {
+            width: 100%;
+            height: 25rem;
+            object-fit: cover;
+            border-radius: $radio-default;
+            box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.15); 
+            // Hover: Levantamiento
+            transition: $transicion-hover-img;
+
+            &:hover {
+                transform: translateY(-1rem); 
+            }
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+// CTA
+// ----------------------------------------------------
+
+.cta-text{
+    text-align: center;
+    font-size: 2.5rem; 
+    color: $color-texto-oscuro;
+    font-weight: 700;
+    margin-top: 5rem; 
+}
+
+
+// ----------------------------------------------------
+// Página de sala individual
+// ----------------------------------------------------
+
+.sala-header {
+    text-align: center;
+    margin-bottom: $espacio-l; 
+
+    h1 {
+        font-size: 4.2rem; 
+        color: $color-primario;
+        margin-bottom: 3rem; 
+    }
+}
+
+.sala-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $espacio-s;
+    margin-bottom: $espacio-l;
+
+    img {
+        width: 100%;
+        height: 25rem; 
+        object-fit: cover;
+        border-radius: $radio-default;
+        box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.15);
+        // Hover: Levantamiento
+        transition: $transicion-hover-img;
+
+        &:hover {
+            transform: translateY(-1rem); 
+        }
+    }
+}
+
+.reserva-centro {
+    text-align: center;
+}
+
+.reserva-button {
+    display: inline-block;
+    background-color: $color-primario;
+    color: $color-fondo-claro;
+    padding: $espacio-s $espacio-l; 
+    border-radius: 2.5rem; 
+    text-decoration: none;
+    font-size: 1.6rem; 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: $transicion-default;
+    margin: 3rem 0; 
+
+    &:hover {
+        background-color: $color-focus-outline;
+        transform: translateY(-0.2rem); 
+        box-shadow: 0 0.5rem 1.5rem rgba(20, 82, 20, 0.3); 
+    }
+}
+
+
+// ----------------------------------------------------
+// Información de sala (Desplegables)
+// ----------------------------------------------------
+
+.sala-info {
+    background-color: $color-fondo-gris-claro;
+    padding: 3rem; 
+    border-radius: $radio-default; 
+    margin-bottom: $espacio-m; 
+}
+
+.info-item {
+    margin-bottom: $espacio-s; 
+    border: 0.2rem solid $color-primario; 
+    border-radius: $radio-default; 
+    background-color: $color-fondo-claro;
+
+    // Corrección de borde cortado
+    &:last-child {
+        padding-bottom: 0.2rem; 
+        margin-bottom: 0.5rem; 
+    }
+
+    .info-header {
+        display: flex;
+        align-items: center;
+        padding: $espacio-s $espacio-m; 
+        background-color: lighten($color-fondo-gris-claro, 2%);
+        cursor: pointer;
+        transition: $transicion-default;
+        list-style: none;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &::after {
+            content: '▼';
+            margin-left: auto;
+            font-size: 1.4rem; 
+            color: $color-primario;
+            transition: transform 0.3s;
+        }
+
+        &:hover {
+            background-color: lighten($color-secundario, 15%);
+        }
+    }
+
+    .info-icon {
+        font-size: 2.4rem; 
+        margin-right: $espacio-s; 
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: $color-primario;
+        font-size: 1.6rem; 
+    }
+
+    .info-content {
+        padding: $espacio-m; 
+        background-color: $color-fondo-claro;
+
+        p {
+            margin: 0;
+            color: $color-texto-oscuro;
+            line-height: 1.6;
+        }
+    }
+}
+
+.sala-plano {
+    text-align: center;
+    margin: $espacio-l 0; 
+
+    img {
+        max-width: 60rem; 
+        width: 100%;
+        height: auto;
+        border-radius: $radio-default; 
+        box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.15); 
+    }
+}
+
+
+// ----------------------------------------------------
+// Formulario de reservas (CORREGIDO)
+// ----------------------------------------------------
+
+.reservas-container {
+    max-width: 70rem; 
+    margin: 0 auto;
+
+    h1 {
+        text-align: center;
+        font-size: 3.8rem; 
+        color: $color-primario;
+        margin-bottom: $espacio-m; 
+    }
+
+    .reservas-intro {
+        text-align: center;
+        font-size: 1.4rem; 
+        color: #666;
+        margin-bottom: $espacio-l; 
+    }
+
+    .form-section {
+        margin-bottom: 3.5rem; 
+
+        h2 {
+            font-size: 1.8rem; 
+            font-weight: 700;
+            color: $color-texto-oscuro;
+            margin-bottom: $espacio-m; 
+            text-transform: uppercase;
+        }
+    }
+
+    .form-group {
+        margin-bottom: $espacio-m; 
+
+        label {
+            display: block;
+            font-size: 1.4rem; 
+            font-weight: 600;
+            color: $color-texto-oscuro;
+            margin-bottom: $espacio-xs; 
+        }
+        
+        // Estilos de inputs/select/textarea anidados (CORREGIDO)
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 1.2rem $espacio-s; 
+            border: none;
+            background-color: $color-secundario; 
+            border-radius: 2.5rem; 
+            font-size: 1.4rem; 
+            font-family: $fuente-principal;
+            color: $color-texto-oscuro;
+
+            &:focus {
+                outline: 0.2rem solid $color-focus-outline; 
+            }
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 8rem; 
+            border-radius: $espacio-s; 
+        }
+    }
+
+    .submit-button {
+        display: block;
+        width: 20rem; 
+        margin: $espacio-l auto 0; 
+        background-color: $color-secundario;
+        color: $color-texto-oscuro;
+        padding: $espacio-s $espacio-l; 
+        border: none;
+        border-radius: 2.5rem; 
+        font-size: 1.6rem; 
+        font-weight: 700;
+        text-transform: capitalize;
+        cursor: pointer;
+        transition: $transicion-default;
+
+        &:hover {
+            background-color: $color-primario;
+            color: $color-fondo-claro;
+            transform: translateY(-0.2rem); 
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+// Login (CORREGIDO)
+// ----------------------------------------------------
+
+.login-container {
+    max-width: 40rem; 
+    margin: 8rem auto; 
+    padding: $espacio-l; 
+    background-color: $color-fondo-gris-claro;
+    border-radius: 1rem; 
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1); 
+
+    h1 {
+        text-align: center;
+        font-size: 3.2rem; 
+        color: $color-primario;
+        margin-bottom: 3rem; 
+    }
+
+    .login-form {
+        .form-group {
+            margin-bottom: $espacio-m; 
+            
+            label {
+                display: block;
+                font-size: 1.4rem; 
+                font-weight: 600;
+                color: $color-texto-oscuro;
+                margin-bottom: $espacio-xs; 
+            }
+            
+            // Estilos de inputs anidados (CORREGIDO)
+            input {
+                width: 100%;
+                padding: 1.2rem $espacio-s; 
+                border: none;
+                background-color: $color-secundario; 
+                border-radius: 2.5rem; 
+                font-size: 1.4rem; 
+                font-family: $fuente-principal;
+                color: $color-texto-oscuro;
+                
+                &:focus {
+                    outline: 0.2rem solid $color-focus-outline; 
+                }
+            }
+        }
+    }
+
+    .login-button {
+        width: 100%;
+        background-color: $color-primario;
+        color: $color-fondo-claro;
+        padding: 1.2rem; 
+        border: none;
+        border-radius: 2.5rem; 
+        font-size: 1.6rem; 
+        font-weight: 600;
+        cursor: pointer;
+        transition: $transicion-default;
+
+        &:hover {
+            background-color: $color-focus-outline;
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+// Footer
+// ----------------------------------------------------
+
+footer {
+    background-color: $color-gris-footer;
+    padding: 3rem $espacio-m; 
+    margin-top: auto; 
+}
+
+.footer-container {
+    max-width: 100%; 
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $espacio-l; 
+    align-items: start;
+
+    .footer-section {
+        h3 {
+            font-size: 1.4rem; 
+            font-weight: 700;
+            color: $color-texto-oscuro;
+            margin-bottom: 1rem; 
+            display: flex;
+            align-items: center;
+            gap: 1rem; 
+        }
+
+        p {
+            font-size: 1.3rem; 
+            color: $color-texto-oscuro;
+            line-height: 1.6;
+        }
+    }
+
+    .footer-map {
+        width: 100%;
+        height: 15rem; 
+        border-radius: $radio-default; 
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            // Marco sutil
+            border: 0.1rem solid $color-gris-marco-mapa; 
+            padding: 0.2rem; 
+        }
+    }
+}
+
+
+// ----------------------------------------------------
+// Responsive
+// ----------------------------------------------------
+
+@media (max-width: 768px) { 
+    .header-container {
+        flex-direction: column;
+        gap: $espacio-s; 
+    }
+
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem; 
+    }
+
+    .salas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .eventos-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .sala-images {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+
+    .principal {
+        h1 {
+            font-size: 3.6rem; 
+        }
+
+        h2 {
+            font-size: 2.4rem; 
+        }
+    }
+}

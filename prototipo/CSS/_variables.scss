@@ -1,0 +1,29 @@
+// _variables.scss
+
+//  Colores
+$color-primario: #145214;               // Verde principal oscuro (Header, Botones principales, Títulos)
+$color-secundario: #A8D5BA;             // Verde claro (Navegación, Fondo de inputs)
+$color-texto-oscuro: #333;              // Texto general
+$color-fondo-claro: #FFFFFF;            // Fondo principal
+$color-fondo-gris-claro: #f9f9f9;       // Fondo de secciones/Login/Sala-info
+$color-gris-footer: #c0c0c0;            // Fondo del Footer
+$color-gris-marco-mapa: #999999;        // Gris para el marco sutil del mapa
+$color-gris-claro-hover: #f0f0f0;       // Gris muy claro para hover en elementos blancos
+$color-focus-outline: #0d3a0d;          // Verde oscuro ligeramente más profundo para hover/focus
+$color-separador-linea: #e0e0e0;        // Gris claro para líneas de separación
+
+//  Tamaños (Base 1rem = 10px)
+$espacio-xs: 0.8rem;                     // 8px (Small spacing)
+$espacio-s: 1.5rem;                      // 15px (Medium spacing/Header padding)
+$espacio-m: 2rem;                       // 20px
+$espacio-l: 4rem;                       // 40px (Large spacing)
+$altura-header: 8.5rem;                  // 85px (Altura fija del header)
+$padding-cuerpo: 15rem;                  // 150px (padding-top del body para compensar las barras fijas)
+
+// Transiciones
+$transicion-default: all 0.3s ease;
+$transicion-hover-img: transform 0.3s ease-in-out;
+
+//  Tipografía y Efectos
+$fuente-principal: 'Open Sans', Arial, sans-serif;
+$radio-default: 0.8rem;                 // Radio de borde por defecto (8px)

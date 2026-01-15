@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas - Palacio de Eventos</title>
+    <link rel="stylesheet" href="../CSS/styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="../IMAGENES/iconos/logo-transparent-png.png" alt="Logo">
+                <span class="logo-text">Palacio de Eventos</span>
+            </div>
+            <a href="login.html" class="user-menu">
+                <img src="../IMAGENES/iconos/user.png" alt="Logo">
+            </a>
+        </div>
+    </header>
+
+    <nav>
+     <div class="nav-container">
+            <a href="../index.html">PÁGINA PRINCIPAL</a>
+            <a href="InformacionGeneral.html">INFORMACIÓN GENERAL</a>
+            <a href="Reservas.html">RESERVAS</a>
+            <a href="Galeria.html">GALERÍA</a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="reservas-container">
+            <h1>Reserva tu espacio</h1>
+            <p class="reservas-intro">
+                Rellena el siguiente formulario y nos pondremos en contacto contigo para confirmar la<br>
+                disponibilidad y los detalles de tu evento.
+            </p>
+
+            <form action="ConfirmacionReserva.html" method="post">
+                <div class="form-section">
+                    <h2>DATOS PERSONALES</h2>
+                    
+                    <div class="form-group">
+                        <label for="nombre">Nombre completo:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Número de teléfono:</label>
+                        <input type="tel" id="telefono" name="telefono" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>INFORMACIÓN DEL EVENTO</h2>
+                    
+                    <div class="form-group">
+                        <label for="sala">Sala:</label>
+                        <select id="sala" name="sala" required>
+                            <option value="">Selecciona una sala</option>
+                            <option value="jardin">Sala Jardín</option>
+                            <option value="real">Sala Real</option>
+                            <option value="modernista">Sala Modernista</option>
+                            <option value="escenica">Sala Escénica</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo-evento">Tipo de evento:</label>
+                        <input type="text" id="tipo-evento" name="tipo-evento" placeholder="Boda, conferencia, celebración..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha">Fecha:</label>
+                        <input type="date" id="fecha" name="fecha" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horario">Horario aproximado:</label>
+                        <input type="text" id="horario" name="horario" placeholder="Ej: 18:00 - 23:00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="asistentes">Número de asistentes:</label>
+                        <input type="number" id="asistentes" name="asistentes" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="servicios">Servicios adicionales:</label>
+                        <textarea id="servicios" name="servicios" placeholder="Decoración, equipamiento audiovisual..."></textarea>
+                    </div>
+                </div>
+
+                <button type="button" class="submit-button" onclick="window.location.href='ConfirmacionReserva.html'">Enviar</button>
+            </form>
+        </div>
+    </main>
+
+   <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3><img src="../IMAGENES/iconos/maps.png">Dirección:</h3>
+                <p>Palacio de Eventos<br>
+                Calle Ejemplo 123, Sevilla España</p>
+            </div>
+            <div class="footer-section">
+                <h3><img src="../IMAGENES/iconos/phone.png">Teléfono:</h3>
+                <p>+34 123 456 789</p>
+                <h3><img src="../IMAGENES/iconos/mail.png">Correo electrónico:</h3>
+                <p>info@palaciodeeventos.com</p>
+            </div>
+            <div class="footer-section">
+                <div class="footer-map">
+                    <img src="../IMAGENES/mapa.png" alt="Mapa">
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
