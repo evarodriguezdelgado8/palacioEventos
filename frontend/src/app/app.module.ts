@@ -14,6 +14,8 @@ import { SalaDetailComponent } from './components/sala-detail/sala-detail.compon
 import { ReservasComponent } from './components/reservas/reservas.component';
 import { MisReservasComponent } from './components/mis-reservas/mis-reservas.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { InformacionGeneralComponent } from './components/informacion-general/informacion-general.component';
+import { GaleriaComponent } from './components/galeria/galeria.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     RegistroComponent,
     SalaDetailComponent,
     ReservasComponent,
-    MisReservasComponent
+    MisReservasComponent,
+    InformacionGeneralComponent,
+    GaleriaComponent
   ],
   imports: [
     BrowserModule,

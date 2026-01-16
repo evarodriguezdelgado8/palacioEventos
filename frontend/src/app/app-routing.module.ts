@@ -7,9 +7,13 @@ import { SalaDetailComponent } from './components/sala-detail/sala-detail.compon
 import { ReservasComponent } from './components/reservas/reservas.component';
 import { MisReservasComponent } from './components/mis-reservas/mis-reservas.component';
 import { AuthGuard } from './guards/auth.guard';
+import { InformacionGeneralComponent } from './components/informacion-general/informacion-general.component';
+import { GaleriaComponent } from './components/galeria/galeria.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'informacion-general', component: InformacionGeneralComponent },
+  { path: 'galeria', component: GaleriaComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'salas/:id', component: SalaDetailComponent },

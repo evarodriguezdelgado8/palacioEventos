@@ -13,8 +13,8 @@ import { AuthService } from '../../services/auth.service';
 
       <div class="sala-images">
          <img [src]="'assets/' + sala.imagen_url" [alt]="sala.nombre">
-         <img src="assets/detalle1.jpg" onerror="this.src='https://placehold.co/400x300'" alt="Detalle">
-         <img src="assets/detalle2.jpg" onerror="this.src='https://placehold.co/400x300'" alt="Detalle">
+         <img src="assets/galeria/galeria4.png" alt="Detalle">
+         <img src="assets/galeria/galeria5.png" alt="Detalle">
       </div>
 
       <div class="sala-info">
@@ -52,12 +52,14 @@ export class SalaDetailComponent implements OnInit {
     }
 
     ngOnInit() {
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.reservasService.getSalaById(+id).subscribe(data => {
-                this.sala = data;
-            });
-        }
+        this.route.paramMap.subscribe(params => {
+            const id = params.get('id');
+            if (id) {
+                this.reservasService.getSalaById(+id).subscribe(data => {
+                    this.sala = data;
+                });
+            }
+        });
     }
 
     irAReservar() {

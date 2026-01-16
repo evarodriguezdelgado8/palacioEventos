@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
       <div class="header-container">
         <div class="logo">
           <!-- Placeholder for logo image, assuming assets/logo.png exists or using text -->
-          <div class="logo-text">PALACIO EVENTOS</div>
+          <img src="assets/iconos/logo-transparent-png.png" alt="Palacio Eventos Logo">
         </div>
         
         <div class="user-menu" *ngIf="currentUser; else loginBtn">
@@ -26,6 +26,8 @@ import { AuthService } from '../../services/auth.service';
     <nav>
       <div class="nav-container">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+        <a routerLink="/informacion-general" routerLinkActive="active">Información</a>
+        <a routerLink="/galeria" routerLinkActive="active">Galería</a>
         <a routerLink="/salas/1">Sala Real</a>
         <a routerLink="/salas/2">Sala Modernista</a>
         <a routerLink="/salas/3">Sala Escénica</a>
