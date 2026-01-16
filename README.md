@@ -70,11 +70,5 @@ index.html (Página Principal)
 ├── reservas.html
 ├── galeria.html
 └── login.html
-Desarrollo futuro sugerido:
-Integrar JavaScript para validación de formularios
-Conectar con backend (Node.js/PHP como sugiere la presentación)
-Implementar base de datos MySQL para reservas
-Añadir sistema de autenticación real
-Incorporar calendario interactivo para reservas
-Añadir galería de imágenes real con lightbox
+
 Proyecto desarrollado para: Campus Cámara de Comercio de Sevilla Asignatura: Diseño de Interfaces Web Autores: Fernando Collantes de Terán Gómez, Francisco García Partida, Eva Rodríguez Delgado

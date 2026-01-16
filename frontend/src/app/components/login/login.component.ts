@@ -1,0 +1,82 @@
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
+@Component({
+  selector: 'app-login',
+  template: `
+    <div class="login-container">
+      <h1>Iniciar Sesión</h1>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" id="email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
+          <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+            <div *ngIf="f['email'].errors['required']">Email es requerido</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+          <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+            <div *ngIf="f['password'].errors['required']">Contraseña es requerida</div>
+          </div>
+        </div>
+        <div *ngIf="error" class="alert alert-danger" style="color: red; margin-bottom: 1rem; text-align: center;">{{ error }}</div>
+        <button [disabled]="loading" class="login-button">
+          <span *ngIf="loading">Cargando...</span>
+          <span *ngIf="!loading">Ingresar</span>
+        </button>
+        <div style="margin-top: 2rem; text-align: center;">
+            <a routerLink="/registro" style="color: #145214; font-weight: 600;">¿No tienes cuenta? Regístrate aquí</a>
+        </div>
+      </form>
+    </div>
+  `,
+  styles: []
+})
+export class LoginComponent {
+  loginForm: FormGroup;
+  loading = false;
+  submitted = false;
+  returnUrl: string;
+  error = '';
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    if (this.authService.currentUserValue) {
+      this.router.navigate(['/']);
+    }
+    this.loginForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
+
+  get f() { return this.loginForm.controls; }
+
+  onSubmit() {
+    this.submitted = true;
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    this.loading = true;
+    this.authService.login(this.loginForm.value)
+      .subscribe({
+        next: () => {
+          this.router.navigate([this.returnUrl]);
+        },
+        error: error => {
+          this.error = error.error ? error.error.error : 'Error en el login';
+          this.loading = false;
+        }
+      });
+  }
+}

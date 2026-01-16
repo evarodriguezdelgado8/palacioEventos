@@ -1,42 +1,42 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './pages/home/home.component';
-import { InformacionGeneralComponent } from './pages/informacion-general/informacion-general.component';
-import { GaleriaComponent } from './pages/galeria/galeria.component';
-import { ReservasComponent } from './pages/reservas/reservas.component';
-import { ConfirmacionReservaComponent } from './pages/confirmacion-reserva/confirmacion-reserva.component';
-import { LoginComponent } from './pages/login/login.component';
-import { SalaEscenicaComponent } from './pages/salas/sala-escenica/sala-escenica.component';
-import { SalaJardinComponent } from './pages/salas/sala-jardin/sala-jardin.component';
-import { SalaModernistaComponent } from './pages/salas/sala-modernista/sala-modernista.component';
-import { SalaRealComponent } from './pages/salas/sala-real/sala-real.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
-import { FooterComponent } from './shared/footer/footer.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegistroComponent } from './components/registro/registro.component';
+import { SalaDetailComponent } from './components/sala-detail/sala-detail.component';
+import { ReservasComponent } from './components/reservas/reservas.component';
+import { MisReservasComponent } from './components/mis-reservas/mis-reservas.component';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    InformacionGeneralComponent,
-    GaleriaComponent,
-    ReservasComponent,
-    ConfirmacionReservaComponent,
-    LoginComponent,
-    SalaEscenicaComponent,
-    SalaJardinComponent,
-    SalaModernistaComponent,
-    SalaRealComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    HomeComponent,
+    LoginComponent,
+    RegistroComponent,
+    SalaDetailComponent,
+    ReservasComponent,
+    MisReservasComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
