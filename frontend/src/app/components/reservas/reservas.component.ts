@@ -4,13 +4,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReservasService } from '../../services/reservas.service';
 
 @Component({
-    selector: 'app-reservas',
-    template: `
+  selector: 'app-reservas',
+  template: `
+    <div *ngIf="showToast" class="toast-notification">
+      <div class="toast-icon">✅</div>
+      <div class="toast-content">
+        <div class="toast-title">¡Reserva Confirmada!</div>
+        <div class="toast-message">Te esperamos en el Palacio.</div>
+      </div>
+    </div>
+
     <div class="reservas-container">
       <h1>Reservar Sala</h1>
       <p class="reservas-intro" *ngIf="sala">Estás reservando: <strong>{{ sala.nombre }}</strong></p>
 
-      <!-- Calendar Visual -->
       <div class="calendar-container" *ngIf="sala">
         <div class="calendar-header">
             <button (click)="prevMonth()">Anterior</button>
@@ -68,7 +75,6 @@ import { ReservasService } from '../../services/reservas.service';
            </div>
         </div>
 
-        <!-- Additional Services Toggle -->
         <div class="form-group checkbox-group">
           <label class="checkbox-label">
               <input type="checkbox" formControlName="wantsServices" (change)="onServicesToggle()">
@@ -76,7 +82,6 @@ import { ReservasService } from '../../services/reservas.service';
           </label>
         </div>
 
-        <!-- Conditional Contact Fields -->
         <div *ngIf="showContactFields" class="contact-fields-container">
             <p class="info-message">
                 <span class="info-icon">ℹ️</span> Serán contactados para información acerca de servicios adicionales.
@@ -99,7 +104,40 @@ import { ReservasService } from '../../services/reservas.service';
       </form>
     </div>
   `,
-    styles: [`
+  styles: [`
+    /* 2. ESTILOS DE LA MICROINTERACCIÓN (TOAST) */
+    .toast-notification {
+      position: fixed;
+      /* CAMBIO AQUÍ: Lo bajamos a 120px para que no tape el header */
+      top: 120px; 
+      right: 20px;
+      
+      background-color: #145214; /* Verde corporativo */
+      color: white;
+      
+      /* CAMBIO AQUÍ: Añadimos borde blanco para que resalte más */
+      border: 2px solid white; 
+      
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Sombra un poco más fuerte */
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      animation: slideInToast 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    }
+
+    .toast-icon { font-size: 1.5rem; }
+    .toast-title { font-weight: bold; font-size: 1.1rem; }
+    .toast-message { font-size: 0.9rem; opacity: 0.9; }
+
+    @keyframes slideInToast {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ESTILOS ORIGINALES */
     .calendar-container {
         max-width: 400px;
         margin: 0 auto 3rem;
@@ -175,17 +213,15 @@ import { ReservasService } from '../../services/reservas.service';
     .dot.available { background: #f0f0f0; border: 1px solid #ccc; }
     .dot.occupied { background: #ffcccc; }
     .dot.selected { background: #145214; }
-
-    /* New Styles */
     .checkbox-group {
         display: flex;
         align-items: center;
         justify-content: center;
         background: #e8f5e9;
-        padding: 2rem 1rem; /* More vertical padding to ensure visual space */
+        padding: 2rem 1rem;
         border-radius: 8px;
         margin-bottom: 2rem;
-        min-height: 80px; /* Force minimum height for vertical centering effect */
+        min-height: 80px;
     }
     .checkbox-label {
         font-weight: 600;
@@ -193,19 +229,19 @@ import { ReservasService } from '../../services/reservas.service';
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 30px; /* Significantly increased gap */
+        gap: 30px;
         cursor: pointer;
         width: 100%;
         margin-bottom: 0;
-        font-size: 1.2rem; /* Slightly larger text */
-        line-height: 1; /* Reset line height for better vertical alignment with checkbox */
+        font-size: 1.2rem;
+        line-height: 1;
     }
     .checkbox-label input {
-        width: 25px !important; /* Larger checkbox */
+        width: 25px !important;
         height: 25px;
         margin: 0;
         cursor: pointer;
-        accent-color: #145214; /* Browser support dependent, but helps if supported or use custom */
+        accent-color: #145214;
     }
     .contact-fields-container {
         border-left: 3px solid #145214;
@@ -237,6 +273,7 @@ export class ReservasComponent implements OnInit {
     minAsistentes = 1;
 
     showContactFields = false;
+    showToast = false;
 
     // Calendar State
     currentDate = new Date();
@@ -269,12 +306,9 @@ export class ReservasComponent implements OnInit {
             this.reservaForm.patchValue({ sala_id: salaId });
             this.reservasService.getSalaById(+salaId).subscribe(data => {
                 this.sala = data;
-
-                // Determine Minimum Assistants logic
                 const normalized = this.normalizeSalaName(this.sala.nombre);
                 this.minAsistentes = (normalized === 'salaJardin') ? 50 : 20;
 
-                // Set default value to minimum
                 this.reservaForm.patchValue({ numero_asistentes: this.minAsistentes });
 
                 this.reservaForm.get('numero_asistentes')?.setValidators([
@@ -289,7 +323,6 @@ export class ReservasComponent implements OnInit {
         }
     }
 
-    // Toggle logic for additional services
     onServicesToggle() {
         this.showContactFields = this.reservaForm.get('wantsServices')?.value;
         const phoneControl = this.reservaForm.get('telefono_contacto');
@@ -308,7 +341,6 @@ export class ReservasComponent implements OnInit {
         emailControl?.updateValueAndValidity();
     }
 
-    // Reuse normalization logic
     private normalizeSalaName(nombre: string): string {
         if (!nombre) return '';
         const lower = nombre.toLowerCase();
@@ -402,14 +434,12 @@ export class ReservasComponent implements OnInit {
 
     onSubmit() {
         if (this.reservaForm.invalid || this.fechaOcupada) {
-            // Mark all as touched to show errors
             this.reservaForm.markAllAsTouched();
             return;
         }
 
         this.loading = true;
 
-        // Prepare payload: format 'servicios_adicionales' string based on fields
         const formVal = this.reservaForm.value;
         let serviciosStr = 'No solicitados';
 
@@ -427,8 +457,13 @@ export class ReservasComponent implements OnInit {
 
         this.reservasService.crearReserva(payload).subscribe({
             next: () => {
-                alert('Reserva creada con éxito!');
-                this.router.navigate(['/mis-reservas']);
+                this.loading = false;
+                this.showToast = true;
+
+                // 4 SEGUNDOS ANTES DE REDIRIGIR
+                setTimeout(() => {
+                     this.router.navigate(['/mis-reservas']);
+                }, 4000); 
             },
             error: (err) => {
                 this.error = err.error?.error || 'Error al crear la reserva';

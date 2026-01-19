@@ -3,11 +3,37 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
+  // SOLO AÑADIMOS EL CSS DE LA LÍNEA AQUÍ
+  styles: [`
+    /* Preparamos el enlace para que la línea se posicione respecto a él */
+    nav a {
+      position: relative;
+      text-decoration: none; /* Aseguramos que no haya subrayado por defecto */
+    }
+
+    /* Dibujamos la línea (invisible inicialmente) */
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;        /* Grosor de la línea */
+      bottom: 0;          /* Pegada abajo del texto */
+      left: 50%;          /* Empieza desde el centro */
+      background-color: #d4af37; /* Color Dorado */
+      transition: all 0.3s ease-in-out; /* Animación suave */
+    }
+
+    /* Hacemos que la línea crezca al pasar el ratón (Hover) o si está activo */
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+      left: 0;
+    }
+  `],
   template: `
     <header>
       <div class="header-container">
         <div class="logo">
-          <!-- Placeholder for logo image, assuming assets/logo.png exists or using text -->
           <img src="assets/iconos/logo-transparent-png.png" alt="Palacio Eventos Logo">
         </div>
         
@@ -35,8 +61,7 @@ import { AuthService } from '../../services/auth.service';
         <a routerLink="/mis-reservas" *ngIf="currentUser">Mis Reservas</a>
       </div>
     </nav>
-  `,
-  styles: []
+  `
 })
 export class NavbarComponent {
   currentUser: any;

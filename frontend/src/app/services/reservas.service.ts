@@ -29,4 +29,8 @@ export class ReservasService {
     getMisReservas(): Observable<any[]> {
         return this.http.get<any[]>(`${this.apiUrl}/reservas/mis-reservas`);
     }
+    
+    eliminarReserva(id: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/reservas/${id}`);
+    }
 }

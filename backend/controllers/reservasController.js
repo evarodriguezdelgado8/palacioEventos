@@ -52,7 +52,6 @@ export const getDisponibilidad = async (req, res) => {
         const [fechas] = await db.query('SELECT fecha_evento FROM reservas WHERE sala_id = ?', [sala_id]);
 
         // Retornar array de strings de fechas ocupadas
-        // Retornar array de strings de fechas ocupadas
         const fechasOcupadas = fechas.map(f => {
             const d = new Date(f.fecha_evento);
             const year = d.getFullYear();
@@ -95,3 +94,22 @@ export const getMisReservas = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+// 👇👇 AQUÍ ESTÁ LA NUEVA FUNCIÓN QUE FALTABA 👇👇
+export const eliminarReserva = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Ejecutamos el borrado
+        const [result] = await db.query('DELETE FROM reservas WHERE id = ?', [id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'La reserva no existe o ya fue borrada' });
+        }
+
+        res.json({ message: 'Reserva eliminada correctamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al eliminar la reserva' });
+    }
+};

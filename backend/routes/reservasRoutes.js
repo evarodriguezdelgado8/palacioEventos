@@ -1,5 +1,5 @@
 import express from 'express';
-import { crearReserva, getDisponibilidad, getMisReservas } from '../controllers/reservasController.js';
+import { crearReserva, getDisponibilidad, getMisReservas,eliminarReserva } from '../controllers/reservasController.js';
 import verificarToken from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -25,5 +25,6 @@ const router = express.Router();
 router.get('/disponibilidad/:sala_id', getDisponibilidad); // Availability check might be public? Usually yes. But let's protect creation.
 router.post('/', verificarToken, crearReserva);
 router.get('/mis-reservas', verificarToken, getMisReservas);
+router.delete('/:id', verificarToken, eliminarReserva);
 
 export default router;
