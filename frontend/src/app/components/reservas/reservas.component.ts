@@ -44,7 +44,6 @@ import { ReservasService } from '../../services/reservas.service';
         <div class="form-group">
           <label for="fecha_evento">Fecha del Evento</label>
           <input type="text" id="fecha_evento" formControlName="fecha_evento" readonly /> 
-          <!-- Readonly because selected via calendar -->
           <div *ngIf="fechaOcupada" style="color: red;">La fecha seleccionada no está disponible.</div>
         </div>
 
@@ -59,16 +58,37 @@ import { ReservasService } from '../../services/reservas.service';
         </div>
 
         <div class="form-group">
-          <label for="numero_asistentes">Número de Asistentes (Máx: {{ sala?.capacidad }})</label>
+          <label for="numero_asistentes">Número de Asistentes (Mín: {{ minAsistentes }} - Máx: {{ sala?.capacidad }})</label>
           <input type="number" id="numero_asistentes" formControlName="numero_asistentes" />
            <div *ngIf="reservaForm.controls['numero_asistentes'].errors?.['max']" style="color: red;">
               Excede la capacidad de la sala.
            </div>
+           <div *ngIf="reservaForm.controls['numero_asistentes'].errors?.['min']" style="color: red;">
+              El número de asistentes no puede ser inferior a {{ minAsistentes }}.
+           </div>
         </div>
 
-        <div class="form-group">
-          <label for="servicios_adicionales">Servicios Adicionales</label>
-          <textarea id="servicios_adicionales" formControlName="servicios_adicionales"></textarea>
+        <!-- Additional Services Toggle -->
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+              <input type="checkbox" formControlName="wantsServices" (change)="onServicesToggle()">
+              ¿Desea contratar servicios adicionales?
+          </label>
+        </div>
+
+        <!-- Conditional Contact Fields -->
+        <div *ngIf="showContactFields" class="contact-fields-container">
+            <p class="info-message">
+                <span class="info-icon">ℹ️</span> Serán contactados para información acerca de servicios adicionales.
+            </p>
+            <div class="form-group">
+                <label for="telefono_contacto">Teléfono de Contacto</label>
+                <input type="tel" id="telefono_contacto" formControlName="telefono_contacto" placeholder="+34 600 000 000" />
+            </div>
+            <div class="form-group">
+                <label for="email_contacto">Email de Contacto</label>
+                <input type="email" id="email_contacto" formControlName="email_contacto" placeholder="ejemplo@correo.com" />
+            </div>
         </div>
 
         <div *ngIf="error" style="color: red; text-align: center;">{{ error }}</div>
@@ -155,6 +175,49 @@ import { ReservasService } from '../../services/reservas.service';
     .dot.available { background: #f0f0f0; border: 1px solid #ccc; }
     .dot.occupied { background: #ffcccc; }
     .dot.selected { background: #145214; }
+
+    /* New Styles */
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        background: #e8f5e9;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+    .checkbox-label {
+        font-weight: 600;
+        color: #145214;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .checkbox-label input {
+        width: 20px !important;
+        height: 20px;
+        margin: 0;
+    }
+    .contact-fields-container {
+        border-left: 3px solid #145214;
+        padding-left: 1.5rem;
+        margin-bottom: 2rem;
+        animation: fadeIn 0.3s ease;
+    }
+    .info-message {
+        background-color: #f0f4c3;
+        color: #555;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
   `]
 })
 export class ReservasComponent implements OnInit {
@@ -164,6 +227,9 @@ export class ReservasComponent implements OnInit {
     error = '';
     fechaOcupada = false;
     fechasNoDisponibles: string[] = [];
+    minAsistentes = 1;
+
+    showContactFields = false;
 
     // Calendar State
     currentDate = new Date();
@@ -183,7 +249,9 @@ export class ReservasComponent implements OnInit {
             fecha_evento: ['', Validators.required],
             tipo_evento: ['Boda', Validators.required],
             numero_asistentes: ['', Validators.required],
-            servicios_adicionales: ['']
+            wantsServices: [false],
+            telefono_contacto: [''],
+            email_contacto: ['']
         });
     }
 
@@ -194,14 +262,51 @@ export class ReservasComponent implements OnInit {
             this.reservaForm.patchValue({ sala_id: salaId });
             this.reservasService.getSalaById(+salaId).subscribe(data => {
                 this.sala = data;
+
+                // Determine Minimum Assistants logic
+                const normalized = this.normalizeSalaName(this.sala.nombre);
+                this.minAsistentes = (normalized === 'salaJardin') ? 50 : 20;
+
                 this.reservaForm.get('numero_asistentes')?.setValidators([
                     Validators.required,
-                    Validators.min(1),
+                    Validators.min(this.minAsistentes),
                     Validators.max(this.sala.capacidad)
                 ]);
+                this.reservaForm.get('numero_asistentes')?.updateValueAndValidity();
+
                 this.loadDisponibilidad(+salaId);
             });
         }
+    }
+
+    // Toggle logic for additional services
+    onServicesToggle() {
+        this.showContactFields = this.reservaForm.get('wantsServices')?.value;
+        const phoneControl = this.reservaForm.get('telefono_contacto');
+        const emailControl = this.reservaForm.get('email_contacto');
+
+        if (this.showContactFields) {
+            phoneControl?.setValidators([Validators.required]);
+            emailControl?.setValidators([Validators.required, Validators.email]);
+        } else {
+            phoneControl?.clearValidators();
+            emailControl?.clearValidators();
+            phoneControl?.setValue('');
+            emailControl?.setValue('');
+        }
+        phoneControl?.updateValueAndValidity();
+        emailControl?.updateValueAndValidity();
+    }
+
+    // Reuse normalization logic
+    private normalizeSalaName(nombre: string): string {
+        if (!nombre) return '';
+        const lower = nombre.toLowerCase();
+        if (lower.includes('escénica') || lower.includes('escenica')) return 'salaEscenica';
+        if (lower.includes('jardín') || lower.includes('jardin')) return 'salaJardin';
+        if (lower.includes('modernista')) return 'salaModernista';
+        if (lower.includes('real')) return 'salaReal';
+        return 'salaEscenica';
     }
 
     get currentMonthName() {
@@ -211,7 +316,7 @@ export class ReservasComponent implements OnInit {
     loadDisponibilidad(salaId: number) {
         this.reservasService.getDisponibilidad(salaId).subscribe(fechas => {
             this.fechasNoDisponibles = fechas;
-            this.generateCalendar(); // Refresh calendar to show occupied status
+            this.generateCalendar();
         });
     }
 
@@ -219,16 +324,14 @@ export class ReservasComponent implements OnInit {
         const firstDay = new Date(this.currentYear, this.currentMonth, 1);
         const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
         const daysInMonth = lastDay.getDate();
-        const startDay = firstDay.getDay(); // 0 = Sunday
+        const startDay = firstDay.getDay();
 
         this.calendarDays = [];
 
-        // Empty slots for previous month
         for (let i = 0; i < startDay; i++) {
             this.calendarDays.push(null);
         }
 
-        // Days of current month
         for (let i = 1; i <= daysInMonth; i++) {
             this.calendarDays.push(i);
         }
@@ -288,10 +391,31 @@ export class ReservasComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.reservaForm.invalid || this.fechaOcupada) return;
+        if (this.reservaForm.invalid || this.fechaOcupada) {
+            // Mark all as touched to show errors
+            this.reservaForm.markAllAsTouched();
+            return;
+        }
 
         this.loading = true;
-        this.reservasService.crearReserva(this.reservaForm.value).subscribe({
+
+        // Prepare payload: format 'servicios_adicionales' string based on fields
+        const formVal = this.reservaForm.value;
+        let serviciosStr = 'No solicitados';
+
+        if (formVal.wantsServices) {
+            serviciosStr = `Solicitados. Contacto: ${formVal.telefono_contacto || 'N/A'}, Email: ${formVal.email_contacto || 'N/A'}`;
+        }
+
+        const payload = {
+            sala_id: formVal.sala_id,
+            fecha_evento: formVal.fecha_evento,
+            tipo_evento: formVal.tipo_evento,
+            numero_asistentes: formVal.numero_asistentes,
+            servicios_adicionales: serviciosStr
+        };
+
+        this.reservasService.crearReserva(payload).subscribe({
             next: () => {
                 alert('Reserva creada con éxito!');
                 this.router.navigate(['/mis-reservas']);
