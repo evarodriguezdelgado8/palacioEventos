@@ -52,10 +52,10 @@ import { Component } from '@angular/core';
   `,
   styles: [`
     .footer {
-      background-color: #333333; /* Dark Gray */
+      background-color: var(--color-dark); /* Dark Gray */
       color: #f2f2f2;
       padding: 40px 20px 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: var(--font-body);
     }
 
     .footer-container {
@@ -73,7 +73,8 @@ import { Component } from '@angular/core';
     }
 
     .footer-section h3 {
-      color: #d4af37; /* Gold accent for headers */
+      color: var(--color-gold); /* Gold accent for headers */
+      font-family: var(--font-heading);
       font-size: 1.2rem;
       margin-bottom: 20px;
       border-bottom: 2px solid #555;
@@ -117,7 +118,7 @@ import { Component } from '@angular/core';
     }
 
     .social-links a:hover {
-      color: #d4af37; /* Gold hover */
+      color: var(--color-gold); /* Gold hover */
       padding-left: 5px; /* Subtle movement */
     }
 

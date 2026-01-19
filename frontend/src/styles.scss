@@ -1,5 +1,16 @@
 @charset "UTF-8";
 /* Copied from original styles.css */
+:root {
+  --color-gold: #d4af37;
+  --color-gold-hover: #bfa130;
+  --color-dark: #2c2c2c;
+  --color-primary-green: #145214; /* Keeping existing green for legacy/branding if needed, or replacing */
+  --color-light-bg: #f9f9f9;
+  
+  --font-heading: 'Times New Roman', serif;
+  --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 html {
   font-size: 62.5%;
 }
@@ -14,12 +25,16 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: "Open Sans", Arial, sans-serif;
+  font-family: var(--font-body); /* Global Font */
   font-size: 1.6rem;
   line-height: 1.6;
-  color: #333;
+  color: var(--color-dark);
   background-color: #FFFFFF;
   padding-top: 15rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
 }
 
 header {

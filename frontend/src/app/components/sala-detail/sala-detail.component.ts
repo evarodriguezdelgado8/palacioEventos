@@ -55,12 +55,13 @@ import { AuthService } from '../../services/auth.service';
         padding: 2rem;
         max-width: 1200px;
         margin: 0 auto;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: var(--font-body);
     }
     .sala-header h1 {
         text-align: center;
         margin-bottom: 2rem;
-        color: #333;
+        color: var(--color-dark);
+        font-family: var(--font-heading);
         font-size: 2.5rem;
         font-weight: 300;
         text-transform: uppercase;
@@ -93,7 +94,8 @@ import { AuthService } from '../../services/auth.service';
         margin-bottom: 3rem;
     }
     .info-header {
-        color: #d4af37; /* Gold */
+        color: var(--color-gold); /* Gold */
+        font-family: var(--font-heading);
         font-size: 1.8rem;
         margin-bottom: 1.5rem;
         border-bottom: 1px solid #eee;
@@ -113,7 +115,7 @@ import { AuthService } from '../../services/auth.service';
     }
     .capacity-badge {
         display: inline-block;
-        background: #333;
+        background: var(--color-dark);
         color: #fff;
         padding: 0.5rem 1rem;
         border-radius: 50px;
@@ -121,7 +123,8 @@ import { AuthService } from '../../services/auth.service';
         margin-bottom: 2rem;
     }
     .plano-section h4 {
-        color: #333;
+        color: var(--color-dark);
+        font-family: var(--font-heading);
         font-size: 1.2rem;
         margin-bottom: 1rem;
     }
@@ -141,7 +144,7 @@ import { AuthService } from '../../services/auth.service';
         margin-top: 2rem;
     }
     .reserva-button {
-        background-color: #d4af37;
+        background-color: var(--color-gold);
         color: white;
         border: none;
         padding: 15px 40px;
@@ -153,7 +156,7 @@ import { AuthService } from '../../services/auth.service';
         letter-spacing: 1px;
     }
     .reserva-button:hover {
-        background-color: #bfa130;
+        background-color: var(--color-gold-hover);
     }
     .reserva-button.secondary {
         background-color: #555;
