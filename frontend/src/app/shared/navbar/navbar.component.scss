@@ -1,0 +1,32 @@
+// Logo SVG Animation
+.logo-svg-anim {
+    fill: #FFFFFF; // Color Base: Blanco
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); // Efecto rebote suave
+    cursor: pointer;
+    margin-right: 1rem;
+
+    &:hover {
+        transform: scale(1.15) rotate(5deg);
+        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+    }
+}
+
+// User SVG Animation
+.user-menu {
+    // Ensure the link handles the hover capability nicely
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    .user-svg-anim {
+        fill: #FFFFFF; // Color Base: Blanco
+        transition: all 0.3s ease;
+
+        // El padre user-menu controla el hover para mejor UX
+    }
+
+    &:hover .user-svg-anim {
+        fill: #FFD700; // Amarillo Oro
+        transform: scale(1.2);
+    }
+}
