@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-registro',
-    template: `
+  selector: 'app-registro',
+  template: `
     <div class="login-container">
       <h1>Registro de Usuario</h1>
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
@@ -19,7 +19,12 @@ import { AuthService } from '../../services/auth.service';
         </div>
         <div class="form-group">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" formControlName="password" />
+          <div style="position: relative;">
+              <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" style="padding-right: 2.5rem;" />
+              <span (click)="togglePassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                  {{ showPassword ? '🙈' : '👁️' }}
+              </span>
+          </div>
         </div>
         <div *ngIf="error" style="color: red; margin-bottom: 1rem; text-align: center;">{{ error }}</div>
         <button [disabled]="loading" class="login-button">
@@ -29,42 +34,47 @@ import { AuthService } from '../../services/auth.service';
       </form>
     </div>
   `,
-    styles: []
+  styles: []
 })
 export class RegistroComponent {
-    registerForm: FormGroup;
-    loading = false;
-    submitted = false;
-    error = '';
+  registerForm: FormGroup;
+  loading = false;
+  submitted = false;
+  error = '';
+  showPassword = false;
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private router: Router,
-        private authService: AuthService
-    ) {
-        this.registerForm = this.formBuilder.group({
-            nombre: ['', Validators.required],
-            email: ['', Validators.required],
-            password: ['', Validators.required]
-        });
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.registerForm = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
+
+  onSubmit() {
+    this.submitted = true;
+    if (this.registerForm.invalid) {
+      return;
     }
 
-    onSubmit() {
-        this.submitted = true;
-        if (this.registerForm.invalid) {
-            return;
+    this.loading = true;
+    this.authService.registro(this.registerForm.value)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/login']);
+        },
+        error: error => {
+          this.error = error.error ? error.error.error : 'Error en el registro';
+          this.loading = false;
         }
-
-        this.loading = true;
-        this.authService.registro(this.registerForm.value)
-            .subscribe({
-                next: () => {
-                    this.router.navigate(['/login']);
-                },
-                error: error => {
-                    this.error = error.error ? error.error.error : 'Error en el registro';
-                    this.loading = false;
-                }
-            });
-    }
+      });
+  }
 }

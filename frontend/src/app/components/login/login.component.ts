@@ -18,7 +18,12 @@ import { AuthService } from '../../services/auth.service';
         </div>
         <div class="form-group">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+          <div style="position: relative;">
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" style="padding-right: 2.5rem;" />
+            <span (click)="togglePassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </span>
+          </div>
           <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
             <div *ngIf="f['password'].errors['required']">Contraseña es requerida</div>
           </div>
@@ -42,6 +47,11 @@ export class LoginComponent {
   submitted = false;
   returnUrl: string;
   error = '';
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   constructor(
     private formBuilder: FormBuilder,

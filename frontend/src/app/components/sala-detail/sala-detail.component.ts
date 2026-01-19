@@ -12,9 +12,7 @@ import { AuthService } from '../../services/auth.service';
       </div>
 
       <div class="sala-images">
-         <img [src]="'assets/' + sala.imagen_url" [alt]="sala.nombre">
-         <img src="assets/galeria/galeria4.png" alt="Detalle">
-         <img src="assets/galeria/galeria5.png" alt="Detalle">
+         <img *ngFor="let img of getSalaImages()" [src]="img" [alt]="sala.nombre">
       </div>
 
       <div class="sala-info">
@@ -23,6 +21,10 @@ import { AuthService } from '../../services/auth.service';
             <div class="info-content">
                 <p>{{ sala.descripcion }}</p>
                 <p><strong>Capacidad:</strong> {{ sala.capacidad }} personas</p>
+                <div class="plano-container" style="margin-top: 20px;">
+                    <h4>Plano de la Sala</h4>
+                    <img [src]="getPlanoImage()" alt="Plano de {{ sala.nombre }}" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;">
+                </div>
             </div>
         </div>
       </div>
@@ -64,5 +66,59 @@ export class SalaDetailComponent implements OnInit {
 
     irAReservar() {
         this.router.navigate(['/reservar', this.sala.id]);
+    }
+
+    getPlanoImage(): string {
+        if (!this.sala) return '';
+        const normalized = this.normalizeSalaName(this.sala.nombre);
+        // Special casing based on known files
+        return `assets/${normalized}/plano${normalized.charAt(0).toUpperCase() + normalized.slice(1)}.png`;
+    }
+
+    getSalaImages(): string[] {
+        if (!this.sala) return [];
+        const normalized = this.normalizeSalaName(this.sala.nombre);
+
+        // Manual mapping based on known assets
+        if (normalized === 'salaEscenica') {
+            return [
+                'assets/salaEscenica/salaEscenica1.jpg',
+                'assets/salaEscenica/salaEscenica2.jpg',
+                'assets/salaEscenica/salaEscenica3.jpg'
+            ];
+        } else if (normalized === 'salaJardin') {
+            return [
+                'assets/salaJardin/salaJardin1.jpg',
+                'assets/salaJardin/salaJardin2.jpg',
+                'assets/salaJardin/salaJardin3.jpg',
+                // 'assets/salaJardin/salaJardin4.jpg' // Optional
+            ];
+        } else if (normalized === 'salaModernista') {
+            return [
+                'assets/salaModernista/salaModernista1.webp',
+                'assets/salaModernista/salaModernista2.png',
+                'assets/salaModernista/salaModernista3.webp',
+                // 'assets/salaModernista/salaModernista4.png'
+            ];
+        } else if (normalized === 'salaReal') {
+            return [
+                'assets/salaReal/salaReal1.webp',
+                'assets/salaReal/salaReal2.webp',
+                'assets/salaReal/salaReal3.webp'
+            ];
+        }
+
+        // Fallback
+        return ['assets/' + this.sala.imagen_url];
+    }
+
+    private normalizeSalaName(nombre: string): string {
+        if (!nombre) return '';
+        const lower = nombre.toLowerCase();
+        if (lower.includes('escénica') || lower.includes('escenica')) return 'salaEscenica';
+        if (lower.includes('jardín') || lower.includes('jardin')) return 'salaJardin';
+        if (lower.includes('modernista')) return 'salaModernista';
+        if (lower.includes('real')) return 'salaReal';
+        return 'salaEscenica'; // default or handle error
     }
 }

@@ -10,7 +10,7 @@ import { ReservasService } from '../../services/reservas.service';
         <h2>Experiencias Inolvidables</h2>
         <div class="principal-imagen">
              <!-- Assuming assets exist, otherwise placeholder -->
-             <img src="assets/principal/principal1.jpg" alt="Palacio Principal">
+             <img src="assets/vistaAerea.png" alt="Palacio Principal">
         </div>
       </section>
 
