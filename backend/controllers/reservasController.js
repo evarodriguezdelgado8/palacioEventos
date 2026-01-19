@@ -52,7 +52,14 @@ export const getDisponibilidad = async (req, res) => {
         const [fechas] = await db.query('SELECT fecha_evento FROM reservas WHERE sala_id = ?', [sala_id]);
 
         // Retornar array de strings de fechas ocupadas
-        const fechasOcupadas = fechas.map(f => f.fecha_evento.toISOString().split('T')[0]);
+        // Retornar array de strings de fechas ocupadas
+        const fechasOcupadas = fechas.map(f => {
+            const d = new Date(f.fecha_evento);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        });
         res.json(fechasOcupadas);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -70,7 +77,20 @@ export const getMisReservas = async (req, res) => {
        ORDER BY r.fecha_evento DESC`,
             [usuario_id]
         );
-        res.json(reservas);
+
+        // Formatear fechas manualmente para evitar UTC shift
+        const reservasFormatted = reservas.map(r => {
+            const d = new Date(r.fecha_evento);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return {
+                ...r,
+                fecha_evento: `${year}-${month}-${day}`
+            };
+        });
+
+        res.json(reservasFormatted);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

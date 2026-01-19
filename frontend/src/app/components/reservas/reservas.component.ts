@@ -59,7 +59,7 @@ import { ReservasService } from '../../services/reservas.service';
 
         <div class="form-group">
           <label for="numero_asistentes">Número de Asistentes (Mín: {{ minAsistentes }} - Máx: {{ sala?.capacidad }})</label>
-          <input type="number" id="numero_asistentes" formControlName="numero_asistentes" />
+          <input type="number" id="numero_asistentes" formControlName="numero_asistentes" [min]="minAsistentes" />
            <div *ngIf="reservaForm.controls['numero_asistentes'].errors?.['max']" style="color: red;">
               Excede la capacidad de la sala.
            </div>
@@ -180,25 +180,32 @@ import { ReservasService } from '../../services/reservas.service';
     .checkbox-group {
         display: flex;
         align-items: center;
+        justify-content: center;
         background: #e8f5e9;
-        padding: 1rem;
+        padding: 2rem 1rem; /* More vertical padding to ensure visual space */
         border-radius: 8px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        min-height: 80px; /* Force minimum height for vertical centering effect */
     }
     .checkbox-label {
         font-weight: 600;
         color: #145214;
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: center;
+        gap: 30px; /* Significantly increased gap */
         cursor: pointer;
         width: 100%;
         margin-bottom: 0;
+        font-size: 1.2rem; /* Slightly larger text */
+        line-height: 1; /* Reset line height for better vertical alignment with checkbox */
     }
     .checkbox-label input {
-        width: 20px !important;
-        height: 20px;
+        width: 25px !important; /* Larger checkbox */
+        height: 25px;
         margin: 0;
+        cursor: pointer;
+        accent-color: #145214; /* Browser support dependent, but helps if supported or use custom */
     }
     .contact-fields-container {
         border-left: 3px solid #145214;
@@ -266,6 +273,9 @@ export class ReservasComponent implements OnInit {
                 // Determine Minimum Assistants logic
                 const normalized = this.normalizeSalaName(this.sala.nombre);
                 this.minAsistentes = (normalized === 'salaJardin') ? 50 : 20;
+
+                // Set default value to minimum
+                this.reservaForm.patchValue({ numero_asistentes: this.minAsistentes });
 
                 this.reservaForm.get('numero_asistentes')?.setValidators([
                     Validators.required,
