@@ -103,18 +103,89 @@ import { ReservasService } from '../../services/reservas.service';
         <div *ngIf="error" style="color: red; text-align: center;">{{ error }}</div>
 
         <button type="submit" [disabled]="reservaForm.invalid || loading || fechaOcupada" class="submit-button">
+          <span *ngIf="loading" class="spinner"></span>
           {{ loading ? 'Procesando...' : (isEditing ? 'Guardar Cambios' : 'Confirmar Reserva') }}
         </button>
       </form>
     </div>
   `,
   styles: [`
-    /* 2. ESTILOS DE LA MICROINTERACCIÓN (TOAST) */
+    /* =========================================
+       BLOQUE C: MICROINTERACCIONES
+       ========================================= */
+
+    /* 1. SPINNER DE CARGA */
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 2. ANIMACIÓN "SHAKE" PARA ERRORES EN INPUTS */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    /* Se aplica automáticamente cuando Angular marca el campo como inválido y tocado */
+    input.ng-invalid.ng-touched, 
+    select.ng-invalid.ng-touched {
+      border-color: #dc3545;
+      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+      background-color: #fff8f8;
+    }
+
+    /* 3. CALENDARIO CON TRANSICIONES SUAVES Y EFECTO 3D */
+    .day {
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        background: #f0f0f0;
+        /* Suaviza los cambios de color y tamaño */
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        z-index: 1;
+    }
+    /* Hover Effect: Levanta el día y pone sombra */
+    .day:not(.empty):not(.occupied):not(.past):hover {
+        background: #e8f5e9;
+        color: #145214;
+        transform: scale(1.1) translateY(-3px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+        border: 1px solid #145214;
+        z-index: 10;
+    }
+    .day:active {
+        transform: scale(0.95);
+    }
+
+    /* 4. ANIMACIÓN DE DESPLIEGUE (SLIDE IN) */
+    .contact-fields-container {
+        border-left: 3px solid #145214;
+        padding-left: 1.5rem;
+        margin-bottom: 2rem;
+        /* Empieza invisible y desplazado */
+        opacity: 0;
+        transform: translateY(-10px);
+        animation: slideIn 0.4s ease-out forwards;
+    }
+    @keyframes slideIn {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 5. TOAST NOTIFICATION (Feedback de éxito) */
     .toast-notification {
       position: fixed;
       top: 120px; 
       right: 20px;
-      background-color: #145214; /* Verde corporativo */
+      background-color: #145214;
       color: white;
       border: 2px solid white; 
       padding: 15px 25px;
@@ -126,17 +197,18 @@ import { ReservasService } from '../../services/reservas.service';
       gap: 15px;
       animation: slideInToast 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
     }
-
-    .toast-icon { font-size: 1.5rem; }
-    .toast-title { font-weight: bold; font-size: 1.1rem; }
-    .toast-message { font-size: 0.9rem; opacity: 0.9; }
-
     @keyframes slideInToast {
       from { transform: translateX(120%); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
     }
+    .toast-icon { font-size: 1.5rem; }
+    .toast-title { font-weight: bold; font-size: 1.1rem; }
+    .toast-message { font-size: 0.9rem; opacity: 0.9; }
 
-    /* ESTILOS ORIGINALES */
+
+    /* =========================================
+       ESTILOS GENERALES
+       ========================================= */
     .calendar-container {
         max-width: 400px;
         margin: 0 auto 3rem;
@@ -171,35 +243,12 @@ import { ReservasService } from '../../services/reservas.service';
         color: #666;
         padding-bottom: 5px;
     }
-    .day {
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        background: #f0f0f0;
-        transition: background 0.2s;
-    }
-    .day.empty {
-        background: transparent;
-        cursor: default;
-    }
-    .day:not(.empty):hover {
-        background: #e0e0e0;
-    }
-    .day.occupied {
-        background: #ffcccc;
-        color: #a00;
-        cursor: not-allowed;
-        text-decoration: line-through;
-    }
-    .day.selected {
-        background: #145214;
-        color: #fff;
-    }
-    .day.past {
-        background: #eee;
-        color: #ccc;
-        cursor: not-allowed;
-    }
+    /* Estilos base de estados del calendario */
+    .day.empty { background: transparent; cursor: default; }
+    .day.occupied { background: #ffcccc; color: #a00; cursor: not-allowed; text-decoration: line-through; }
+    .day.selected { background: #145214; color: #fff; }
+    .day.past { background: #eee; color: #ccc; cursor: not-allowed; }
+
     .calendar-legend {
         margin-top: 1rem;
         display: flex;
@@ -212,6 +261,7 @@ import { ReservasService } from '../../services/reservas.service';
     .dot.available { background: #f0f0f0; border: 1px solid #ccc; }
     .dot.occupied { background: #ffcccc; }
     .dot.selected { background: #145214; }
+
     .checkbox-group {
         display: flex;
         align-items: center;
@@ -242,12 +292,6 @@ import { ReservasService } from '../../services/reservas.service';
         cursor: pointer;
         accent-color: #145214;
     }
-    .contact-fields-container {
-        border-left: 3px solid #145214;
-        padding-left: 1.5rem;
-        margin-bottom: 2rem;
-        animation: fadeIn 0.3s ease;
-    }
     .info-message {
         background-color: #f0f4c3;
         color: #555;
@@ -256,9 +300,18 @@ import { ReservasService } from '../../services/reservas.service';
         margin-bottom: 1.5rem;
         font-size: 0.95rem;
     }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-5px); }
-        to { opacity: 1; transform: translateY(0); }
+    
+    /* Botón Submit */
+    .submit-button {
+      /* Aquí puedes añadir tus estilos base del botón si te faltan, 
+         o heredarán del global.css si tienes */
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .submit-button:disabled {
+        background-color: #94a394;
+        cursor: not-allowed;
     }
   `]
 })
@@ -350,29 +403,22 @@ export class ReservasComponent implements OnInit {
         this.loading = true;
         this.reservasService.getReservaById(id).subscribe({
             next: (reserva) => {
-                // 1. Primero cargamos la info de la sala para configurar el calendario y validaciones
+                // 1. Primero cargamos la info de la sala
                 this.cargarDatosSala(reserva.sala_id);
 
-                // 2. Parsear servicios adicionales (string a checkbox/inputs)
+                // 2. Parsear servicios adicionales
                 const tieneServicios = reserva.servicios_adicionales && reserva.servicios_adicionales.includes('Solicitados');
-                let telefono = '';
-                let email = '';
                 
-                // Intento básico de extraer datos si están en el string (opcional)
-                if (tieneServicios) {
-                     // Aquí podrías hacer lógica compleja de split si quisieras recuperar el teléfono exacto
-                     // Por ahora, activamos el checkbox y dejamos que el usuario rellene de nuevo si quiere cambiarlo
-                }
-
                 // 3. Rellenar el formulario
                 this.reservaForm.patchValue({
                     sala_id: reserva.sala_id,
-                    fecha_evento: reserva.fecha_evento, // Debe venir como YYYY-MM-DD del backend
+                    fecha_evento: reserva.fecha_evento,
                     tipo_evento: reserva.tipo_evento,
                     numero_asistentes: reserva.numero_asistentes,
                     wantsServices: tieneServicios,
-                    telefono_contacto: telefono, 
-                    email_contacto: email
+                    // Si tienes lógica para extraer teléfono/email del string, iría aquí
+                    telefono_contacto: '', 
+                    email_contacto: ''
                 });
 
                 // Activar campos de contacto si es necesario
@@ -405,7 +451,6 @@ export class ReservasComponent implements OnInit {
         } else {
             phoneControl?.clearValidators();
             emailControl?.clearValidators();
-            // No borramos el valor al editar por si se arrepiente, a menos que sea deseado
             if (!this.isEditing) {
                 phoneControl?.setValue('');
                 emailControl?.setValue('');
@@ -431,8 +476,6 @@ export class ReservasComponent implements OnInit {
 
     loadDisponibilidad(salaId: number) {
         this.reservasService.getDisponibilidad(salaId).subscribe(fechas => {
-            // Si estamos editando, quitamos la fecha actual de la lista de "ocupadas"
-            // para que no salga roja y nos deje guardarla
             if (this.isEditing) {
                 const fechaActual = this.reservaForm.get('fecha_evento')?.value;
                 this.fechasNoDisponibles = fechas.filter(f => f !== fechaActual);
@@ -515,6 +558,7 @@ export class ReservasComponent implements OnInit {
 
     onSubmit() {
         if (this.reservaForm.invalid || (this.fechaOcupada && !this.isEditing)) {
+            // Esto dispara la validación y activa el CSS "Shake" en los inputs
             this.reservaForm.markAllAsTouched();
             return;
         }
@@ -536,9 +580,7 @@ export class ReservasComponent implements OnInit {
             servicios_adicionales: serviciosStr
         };
 
-        // DECISIÓN: CREAR O ACTUALIZAR
         if (this.isEditing && this.editId) {
-            // --- ACTUALIZAR ---
             this.reservasService.actualizarReserva(this.editId, payload).subscribe({
                 next: () => {
                     this.loading = false;
@@ -553,7 +595,6 @@ export class ReservasComponent implements OnInit {
                 }
             });
         } else {
-            // --- CREAR ---
             this.reservasService.crearReserva(payload).subscribe({
                 next: () => {
                     this.loading = false;
