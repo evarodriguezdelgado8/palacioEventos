@@ -1,5 +1,5 @@
 import express from 'express';
-import { crearReserva, getDisponibilidad, getMisReservas,eliminarReserva } from '../controllers/reservasController.js';
+import { crearReserva, getDisponibilidad, getMisReservas, eliminarReserva, actualizarReserva, getReservaById } from '../controllers/reservasController.js';
 import verificarToken from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -26,5 +26,7 @@ router.get('/disponibilidad/:sala_id', getDisponibilidad); // Availability check
 router.post('/', verificarToken, crearReserva);
 router.get('/mis-reservas', verificarToken, getMisReservas);
 router.delete('/:id', verificarToken, eliminarReserva);
+router.put('/:id', verificarToken, actualizarReserva);
+router.get('/:id', verificarToken, getReservaById);
 
 export default router;

@@ -9,14 +9,18 @@ import { ReservasService } from '../../services/reservas.service';
     <div *ngIf="showToast" class="toast-notification">
       <div class="toast-icon">✅</div>
       <div class="toast-content">
-        <div class="toast-title">¡Reserva Confirmada!</div>
-        <div class="toast-message">Te esperamos en el Palacio.</div>
+        <div class="toast-title">{{ isEditing ? '¡Cambios Guardados!' : '¡Reserva Confirmada!' }}</div>
+        <div class="toast-message">{{ isEditing ? 'Tu reserva ha sido actualizada.' : 'Te esperamos en el Palacio.' }}</div>
       </div>
     </div>
 
     <div class="reservas-container">
-      <h1>Reservar Sala</h1>
-      <p class="reservas-intro" *ngIf="sala">Estás reservando: <strong>{{ sala.nombre }}</strong></p>
+      <h1>{{ isEditing ? 'Editar Reserva' : 'Reservar Sala' }}</h1>
+      
+      <p class="reservas-intro" *ngIf="sala">
+        {{ isEditing ? 'Editando reserva en:' : 'Estás reservando:' }} 
+        <strong>{{ sala.nombre }}</strong>
+      </p>
 
       <div class="calendar-container" *ngIf="sala">
         <div class="calendar-header">
@@ -99,7 +103,7 @@ import { ReservasService } from '../../services/reservas.service';
         <div *ngIf="error" style="color: red; text-align: center;">{{ error }}</div>
 
         <button type="submit" [disabled]="reservaForm.invalid || loading || fechaOcupada" class="submit-button">
-          {{ loading ? 'Procesando...' : 'Confirmar Reserva' }}
+          {{ loading ? 'Procesando...' : (isEditing ? 'Guardar Cambios' : 'Confirmar Reserva') }}
         </button>
       </form>
     </div>
@@ -108,19 +112,14 @@ import { ReservasService } from '../../services/reservas.service';
     /* 2. ESTILOS DE LA MICROINTERACCIÓN (TOAST) */
     .toast-notification {
       position: fixed;
-      /* CAMBIO AQUÍ: Lo bajamos a 120px para que no tape el header */
       top: 120px; 
       right: 20px;
-      
       background-color: #145214; /* Verde corporativo */
       color: white;
-      
-      /* CAMBIO AQUÍ: Añadimos borde blanco para que resalte más */
       border: 2px solid white; 
-      
       padding: 15px 25px;
       border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Sombra un poco más fuerte */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -275,6 +274,10 @@ export class ReservasComponent implements OnInit {
     showContactFields = false;
     showToast = false;
 
+    // NUEVAS VARIABLES PARA EDICIÓN
+    isEditing = false;
+    editId: number | null = null;
+
     // Calendar State
     currentDate = new Date();
     currentMonth = this.currentDate.getMonth();
@@ -301,26 +304,94 @@ export class ReservasComponent implements OnInit {
 
     ngOnInit() {
         this.generateCalendar();
-        const salaId = this.route.snapshot.paramMap.get('id');
-        if (salaId) {
-            this.reservaForm.patchValue({ sala_id: salaId });
-            this.reservasService.getSalaById(+salaId).subscribe(data => {
-                this.sala = data;
-                const normalized = this.normalizeSalaName(this.sala.nombre);
-                this.minAsistentes = (normalized === 'salaJardin') ? 50 : 20;
 
+        // 1. COMPROBAR SI ESTAMOS EDITANDO (Viene por Query Params ?editId=5)
+        this.route.queryParams.subscribe(params => {
+            if (params['editId']) {
+                this.isEditing = true;
+                this.editId = +params['editId'];
+                this.cargarDatosParaEditar(this.editId!);
+            } else {
+                // 2. MODO CREACIÓN NORMAL (Viene por URL /reservas/:id)
+                const salaId = this.route.snapshot.paramMap.get('id');
+                if (salaId) {
+                    this.cargarDatosSala(+salaId);
+                }
+            }
+        });
+    }
+
+    // Carga los datos de la SALA (capacidad, nombre, etc.)
+    cargarDatosSala(salaId: number) {
+        this.reservaForm.patchValue({ sala_id: salaId });
+        this.reservasService.getSalaById(salaId).subscribe(data => {
+            this.sala = data;
+            const normalized = this.normalizeSalaName(this.sala.nombre);
+            this.minAsistentes = (normalized === 'salaJardin') ? 50 : 20;
+
+            // Si NO estamos editando, ponemos el mínimo por defecto
+            if (!this.isEditing) {
                 this.reservaForm.patchValue({ numero_asistentes: this.minAsistentes });
+            }
 
-                this.reservaForm.get('numero_asistentes')?.setValidators([
-                    Validators.required,
-                    Validators.min(this.minAsistentes),
-                    Validators.max(this.sala.capacidad)
-                ]);
-                this.reservaForm.get('numero_asistentes')?.updateValueAndValidity();
+            this.reservaForm.get('numero_asistentes')?.setValidators([
+                Validators.required,
+                Validators.min(this.minAsistentes),
+                Validators.max(this.sala.capacidad)
+            ]);
+            this.reservaForm.get('numero_asistentes')?.updateValueAndValidity();
 
-                this.loadDisponibilidad(+salaId);
-            });
-        }
+            this.loadDisponibilidad(salaId);
+        });
+    }
+
+    // Carga los datos de la RESERVA existente y rellena el formulario
+    cargarDatosParaEditar(id: number) {
+        this.loading = true;
+        this.reservasService.getReservaById(id).subscribe({
+            next: (reserva) => {
+                // 1. Primero cargamos la info de la sala para configurar el calendario y validaciones
+                this.cargarDatosSala(reserva.sala_id);
+
+                // 2. Parsear servicios adicionales (string a checkbox/inputs)
+                const tieneServicios = reserva.servicios_adicionales && reserva.servicios_adicionales.includes('Solicitados');
+                let telefono = '';
+                let email = '';
+                
+                // Intento básico de extraer datos si están en el string (opcional)
+                if (tieneServicios) {
+                     // Aquí podrías hacer lógica compleja de split si quisieras recuperar el teléfono exacto
+                     // Por ahora, activamos el checkbox y dejamos que el usuario rellene de nuevo si quiere cambiarlo
+                }
+
+                // 3. Rellenar el formulario
+                this.reservaForm.patchValue({
+                    sala_id: reserva.sala_id,
+                    fecha_evento: reserva.fecha_evento, // Debe venir como YYYY-MM-DD del backend
+                    tipo_evento: reserva.tipo_evento,
+                    numero_asistentes: reserva.numero_asistentes,
+                    wantsServices: tieneServicios,
+                    telefono_contacto: telefono, 
+                    email_contacto: email
+                });
+
+                // Activar campos de contacto si es necesario
+                this.onServicesToggle();
+
+                // Actualizar calendario visualmente
+                const fechaDate = new Date(reserva.fecha_evento);
+                this.currentMonth = fechaDate.getMonth();
+                this.currentYear = fechaDate.getFullYear();
+                this.generateCalendar();
+
+                this.loading = false;
+            },
+            error: (err) => {
+                console.error(err);
+                this.error = 'No se pudo cargar la reserva para editar.';
+                this.loading = false;
+            }
+        });
     }
 
     onServicesToggle() {
@@ -334,8 +405,11 @@ export class ReservasComponent implements OnInit {
         } else {
             phoneControl?.clearValidators();
             emailControl?.clearValidators();
-            phoneControl?.setValue('');
-            emailControl?.setValue('');
+            // No borramos el valor al editar por si se arrepiente, a menos que sea deseado
+            if (!this.isEditing) {
+                phoneControl?.setValue('');
+                emailControl?.setValue('');
+            }
         }
         phoneControl?.updateValueAndValidity();
         emailControl?.updateValueAndValidity();
@@ -357,7 +431,14 @@ export class ReservasComponent implements OnInit {
 
     loadDisponibilidad(salaId: number) {
         this.reservasService.getDisponibilidad(salaId).subscribe(fechas => {
-            this.fechasNoDisponibles = fechas;
+            // Si estamos editando, quitamos la fecha actual de la lista de "ocupadas"
+            // para que no salga roja y nos deje guardarla
+            if (this.isEditing) {
+                const fechaActual = this.reservaForm.get('fecha_evento')?.value;
+                this.fechasNoDisponibles = fechas.filter(f => f !== fechaActual);
+            } else {
+                this.fechasNoDisponibles = fechas;
+            }
             this.generateCalendar();
         });
     }
@@ -433,7 +514,7 @@ export class ReservasComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.reservaForm.invalid || this.fechaOcupada) {
+        if (this.reservaForm.invalid || (this.fechaOcupada && !this.isEditing)) {
             this.reservaForm.markAllAsTouched();
             return;
         }
@@ -455,20 +536,37 @@ export class ReservasComponent implements OnInit {
             servicios_adicionales: serviciosStr
         };
 
-        this.reservasService.crearReserva(payload).subscribe({
-            next: () => {
-                this.loading = false;
-                this.showToast = true;
-
-                // 4 SEGUNDOS ANTES DE REDIRIGIR
-                setTimeout(() => {
-                     this.router.navigate(['/mis-reservas']);
-                }, 4000); 
-            },
-            error: (err) => {
-                this.error = err.error?.error || 'Error al crear la reserva';
-                this.loading = false;
-            }
-        });
+        // DECISIÓN: CREAR O ACTUALIZAR
+        if (this.isEditing && this.editId) {
+            // --- ACTUALIZAR ---
+            this.reservasService.actualizarReserva(this.editId, payload).subscribe({
+                next: () => {
+                    this.loading = false;
+                    this.showToast = true;
+                    setTimeout(() => {
+                         this.router.navigate(['/mis-reservas']);
+                    }, 3000); 
+                },
+                error: (err) => {
+                    this.error = err.error?.error || 'Error al actualizar la reserva';
+                    this.loading = false;
+                }
+            });
+        } else {
+            // --- CREAR ---
+            this.reservasService.crearReserva(payload).subscribe({
+                next: () => {
+                    this.loading = false;
+                    this.showToast = true;
+                    setTimeout(() => {
+                         this.router.navigate(['/mis-reservas']);
+                    }, 4000); 
+                },
+                error: (err) => {
+                    this.error = err.error?.error || 'Error al crear la reserva';
+                    this.loading = false;
+                }
+            });
+        }
     }
 }

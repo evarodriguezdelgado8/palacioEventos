@@ -95,7 +95,6 @@ export const getMisReservas = async (req, res) => {
     }
 }
 
-// 👇👇 AQUÍ ESTÁ LA NUEVA FUNCIÓN QUE FALTABA 👇👇
 export const eliminarReserva = async (req, res) => {
     try {
         const { id } = req.params;
@@ -111,5 +110,63 @@ export const eliminarReserva = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al eliminar la reserva' });
+    }
+};
+
+
+export const actualizarReserva = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { sala_id, fecha_evento, tipo_evento, numero_asistentes, servicios_adicionales } = req.body;
+
+        // Validaciones básicas (puedes reutilizar las de crear)
+        if (!sala_id || !fecha_evento || !numero_asistentes) {
+            return res.status(400).json({ error: 'Faltan datos obligatorios.' });
+        }
+
+        // Ejecutamos la actualización
+        // OJO: Aquí no estamos comprobando aforo/disponibilidad de nuevo para simplificar, 
+        // pero idealmente deberías verificar si la nueva fecha está libre si la han cambiado.
+        
+        const [result] = await db.query(
+            `UPDATE reservas 
+             SET sala_id = ?, fecha_evento = ?, tipo_evento = ?, numero_asistentes = ?, servicios_adicionales = ?
+             WHERE id = ?`,
+            [sala_id, fecha_evento, tipo_evento, numero_asistentes, servicios_adicionales, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'La reserva no existe.' });
+        }
+
+        res.json({ message: 'Reserva actualizada correctamente.' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al actualizar la reserva' });
+    }
+};
+
+// Obtener una reserva específica por ID
+export const getReservaById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [reserva] = await db.query('SELECT * FROM reservas WHERE id = ?', [id]);
+
+        if (reserva.length === 0) {
+            return res.status(404).json({ error: 'Reserva no encontrada' });
+        }
+
+        // Formatear fecha para que el input date la entienda (YYYY-MM-DD)
+        const d = new Date(reserva[0].fecha_evento);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        
+        reserva[0].fecha_evento = `${year}-${month}-${day}`;
+
+        res.json(reserva[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };

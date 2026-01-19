@@ -52,8 +52,8 @@ import { ReservasService } from '../../services/reservas.service';
           </div>
 
           <div class="card-actions">
-            <button class="btn-action btn-edit" (click)="editarReserva(reserva.id)">
-              ✏️ Editar
+            <button class="btn-action btn-edit" (click)="editarReserva(reserva)">
+                ✏️ Editar
             </button>
             
             <button class="btn-action btn-delete" (click)="abrirModal(reserva)">
@@ -165,9 +165,17 @@ export class MisReservasComponent implements OnInit {
     });
   }
 
-  editarReserva(id: number) {
-    this.router.navigate(['/reservas'], { queryParams: { editId: id } });
-  }
+  editarReserva(reserva: any) {
+    // 1. Verificamos por seguridad que tengamos el ID de la sala
+    if (!reserva.sala_id) {
+        console.error('Error: La reserva no tiene sala_id', reserva);
+        return;
+    }
+
+    this.router.navigate(['/reservar', reserva.sala_id], { 
+      queryParams: { editId: reserva.id } 
+    });
+}
 
   // 1. Abrir Modal (No borra, solo pregunta)
   abrirModal(reserva: any) {
