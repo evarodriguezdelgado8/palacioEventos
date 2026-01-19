@@ -27,14 +27,7 @@ import { ReservasService } from '../../services/reservas.service';
       </section>
       
       <!-- Eventos Galeria (Static for now as per prototype) -->
-      <section class="eventos-section">
-        <h2>Nuestros Eventos</h2>
-        <div class="eventos-gallery">
-            <img src="assets/galeria/galeria1.jpg" alt="Boda">
-            <img src="assets/galeria/galeria2.jpg" alt="Conferencia">
-            <img src="assets/galeria/galeria3.jpg" alt="Fiesta">
-        </div>
-      </section>
+
     </div>
   `,
   styles: []
