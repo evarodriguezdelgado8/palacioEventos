@@ -1,0 +1,64 @@
+<div class="main-container">
+    <section class="principal">
+        <h1>Galería de Imágenes</h1>
+        <h2>Descubre nuestros espacios en acción</h2>
+    </section>
+
+    <section class="eventos-section">
+        <div class="eventos-categoria">
+            <h3>Celebraciones y Bodas</h3>
+
+            <div class="eventos-gallery">
+                <img src="assets/galeria/galeria1.jpg" alt="Boda 1">
+                <img src="assets/galeria/galeria3.jpg" alt="Fiesta">
+                <img src="assets/galeria/galeria2.jpg" alt="Conferencia">
+            </div>
+
+            <!-- Bloque A: Hero Multimedia (VIDEO HTML5 + 2 formatos + controles personalizados) -->
+            <div class="galeria-video-card">
+                <h4 class="galeria-video-title">Vídeo destacado</h4>
+
+                <div class="galeria-video-wrapper" (click)="togglePlay()">
+                    <video #bodaVideo class="galeria-video" preload="metadata" playsinline muted loop
+                        (loadedmetadata)="onLoadedMetadata()" (timeupdate)="onTimeUpdate()">
+                        <source src="assets/videos/bodaEjemplo.webm" type="video/webm" />
+                        <source src="assets/videos/bodaEjemplo.mp4" type="video/mp4" />
+                        Tu navegador no soporta vídeo HTML5.
+                    </video>
+
+                    <div class="galeria-video-gradient"></div>
+
+                    <div class="galeria-video-controls" (click)="$event.stopPropagation()">
+                        <button type="button" class="galeria-video-btn" (click)="togglePlay($event)">
+                            {{ isPlaying ? '⏸ Pausar' : '▶ Reproducir' }}
+                        </button>
+
+                        <div class="galeria-progress" (click)="seek($event)" aria-label="Progreso del vídeo">
+                            <div class="galeria-progress__fill" [style.width.%]="progress"></div>
+                        </div>
+
+                        <button type="button" class="galeria-video-btn galeria-video-btn--ghost"
+                            (click)="toggleMute($event)">
+                            {{ isMuted ? '🔇' : '🔊' }}
+                        </button>
+
+                        <span class="galeria-time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</span>
+                    </div>
+                </div>
+
+                <p class="galeria-video-hint">
+                    Consejo: haz clic en el vídeo para reproducir/pausar. Puedes saltar haciendo clic en la barra.
+                </p>
+            </div>
+        </div>
+
+        <div class="eventos-categoria">
+            <h3>Reuniones Corporativas</h3>
+            <div class="eventos-gallery">
+                <img src="assets/galeria/galeria5.png" alt="Detalle Boda">
+                <img src="assets/galeria/galeria4.png" alt="Reunión">
+                <img src="assets/galeria/galeria6.png" alt="Evento Corporativo">
+            </div>
+        </div>
+    </section>
+</div>

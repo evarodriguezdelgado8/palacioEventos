@@ -4,316 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReservasService } from '../../services/reservas.service';
 
 @Component({
-  selector: 'app-reservas',
-  template: `
-    <div *ngIf="showToast" class="toast-notification">
-      <div class="toast-icon">✅</div>
-      <div class="toast-content">
-        <div class="toast-title">{{ isEditing ? '¡Cambios Guardados!' : '¡Reserva Confirmada!' }}</div>
-        <div class="toast-message">{{ isEditing ? 'Tu reserva ha sido actualizada.' : 'Te esperamos en el Palacio.' }}</div>
-      </div>
-    </div>
-
-    <div class="reservas-container">
-      <h1>{{ isEditing ? 'Editar Reserva' : 'Reservar Sala' }}</h1>
-      
-      <p class="reservas-intro" *ngIf="sala">
-        {{ isEditing ? 'Editando reserva en:' : 'Estás reservando:' }} 
-        <strong>{{ sala.nombre }}</strong>
-      </p>
-
-      <div class="calendar-container" *ngIf="sala">
-        <div class="calendar-header">
-            <button (click)="prevMonth()">Anterior</button>
-            <h3>{{ currentMonthName }} {{ currentYear }}</h3>
-            <button (click)="nextMonth()">Siguiente</button>
-        </div>
-        <div class="calendar-grid">
-            <div class="weekday">Dom</div><div class="weekday">Lun</div><div class="weekday">Mar</div>
-            <div class="weekday">Mié</div><div class="weekday">Jue</div><div class="weekday">Vie</div><div class="weekday">Sáb</div>
-            
-            <div *ngFor="let day of calendarDays" 
-                 class="day" 
-                 [ngClass]="{
-                    'empty': !day, 
-                    'occupied': isOccupied(day), 
-                    'selected': isSelected(day),
-                    'past': isPast(day)
-                 }"
-                 (click)="selectDate(day)">
-                {{ day }}
-            </div>
-        </div>
-        <div class="calendar-legend">
-            <span class="legend-item"><span class="dot available"></span> Disponible</span>
-            <span class="legend-item"><span class="dot occupied"></span> Ocupado</span>
-            <span class="legend-item"><span class="dot selected"></span> Seleccionado</span>
-        </div>
-      </div>
-
-      <form [formGroup]="reservaForm" (ngSubmit)="onSubmit()" class="form-section">
-        <div class="form-group">
-          <label for="fecha_evento">Fecha del Evento</label>
-          <input type="text" id="fecha_evento" formControlName="fecha_evento" readonly /> 
-          <div *ngIf="fechaOcupada" style="color: red;">La fecha seleccionada no está disponible.</div>
-        </div>
-
-        <div class="form-group">
-          <label for="tipo_evento">Tipo de Evento</label>
-          <select id="tipo_evento" formControlName="tipo_evento">
-            <option value="Boda">Boda</option>
-            <option value="Conferencia">Conferencia</option>
-            <option value="Fiesta">Fiesta</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="numero_asistentes">Número de Asistentes (Mín: {{ minAsistentes }} - Máx: {{ sala?.capacidad }})</label>
-          <input type="number" id="numero_asistentes" formControlName="numero_asistentes" [min]="minAsistentes" />
-           <div *ngIf="reservaForm.controls['numero_asistentes'].errors?.['max']" style="color: red;">
-              Excede la capacidad de la sala.
-           </div>
-           <div *ngIf="reservaForm.controls['numero_asistentes'].errors?.['min']" style="color: red;">
-              El número de asistentes no puede ser inferior a {{ minAsistentes }}.
-           </div>
-        </div>
-
-        <div class="form-group checkbox-group">
-          <label class="checkbox-label">
-              <input type="checkbox" formControlName="wantsServices" (change)="onServicesToggle()">
-              ¿Desea contratar servicios adicionales?
-          </label>
-        </div>
-
-        <div *ngIf="showContactFields" class="contact-fields-container">
-            <p class="info-message">
-                <span class="info-icon">ℹ️</span> Serán contactados para información acerca de servicios adicionales.
-            </p>
-            <div class="form-group">
-                <label for="telefono_contacto">Teléfono de Contacto</label>
-                <input type="tel" id="telefono_contacto" formControlName="telefono_contacto" placeholder="+34 600 000 000" />
-            </div>
-            <div class="form-group">
-                <label for="email_contacto">Email de Contacto</label>
-                <input type="email" id="email_contacto" formControlName="email_contacto" placeholder="ejemplo@correo.com" />
-            </div>
-        </div>
-
-        <div *ngIf="error" style="color: red; text-align: center;">{{ error }}</div>
-
-        <button type="submit" [disabled]="reservaForm.invalid || loading || fechaOcupada" class="submit-button">
-          <span *ngIf="loading" class="spinner"></span>
-          {{ loading ? 'Procesando...' : (isEditing ? 'Guardar Cambios' : 'Confirmar Reserva') }}
-        </button>
-      </form>
-    </div>
-  `,
-  styles: [`
-    /* =========================================
-       BLOQUE C: MICROINTERACCIONES
-       ========================================= */
-
-    /* 1. SPINNER DE CARGA */
-    .spinner {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-      margin-right: 8px;
-      vertical-align: middle;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* 2. ANIMACIÓN "SHAKE" PARA ERRORES EN INPUTS */
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-      20%, 40%, 60%, 80% { transform: translateX(5px); }
-    }
-    /* Se aplica automáticamente cuando Angular marca el campo como inválido y tocado */
-    input.ng-invalid.ng-touched, 
-    select.ng-invalid.ng-touched {
-      border-color: #dc3545;
-      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-      background-color: #fff8f8;
-    }
-
-    /* 3. CALENDARIO CON TRANSICIONES SUAVES Y EFECTO 3D */
-    .day {
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        background: #f0f0f0;
-        /* Suaviza los cambios de color y tamaño */
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        position: relative;
-        z-index: 1;
-    }
-    /* Hover Effect: Levanta el día y pone sombra */
-    .day:not(.empty):not(.occupied):not(.past):hover {
-        background: #e8f5e9;
-        color: #145214;
-        transform: scale(1.1) translateY(-3px);
-        box-shadow: 0 10px 15px rgba(0,0,0,0.15);
-        border: 1px solid #145214;
-        z-index: 10;
-    }
-    .day:active {
-        transform: scale(0.95);
-    }
-
-    /* 4. ANIMACIÓN DE DESPLIEGUE (SLIDE IN) */
-    .contact-fields-container {
-        border-left: 3px solid #145214;
-        padding-left: 1.5rem;
-        margin-bottom: 2rem;
-        /* Empieza invisible y desplazado */
-        opacity: 0;
-        transform: translateY(-10px);
-        animation: slideIn 0.4s ease-out forwards;
-    }
-    @keyframes slideIn {
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* 5. TOAST NOTIFICATION (Feedback de éxito) */
-    .toast-notification {
-      position: fixed;
-      top: 120px; 
-      right: 20px;
-      background-color: #145214;
-      color: white;
-      border: 2px solid white; 
-      padding: 15px 25px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      animation: slideInToast 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-    }
-    @keyframes slideInToast {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    .toast-icon { font-size: 1.5rem; }
-    .toast-title { font-weight: bold; font-size: 1.1rem; }
-    .toast-message { font-size: 0.9rem; opacity: 0.9; }
-
-
-    /* =========================================
-       ESTILOS GENERALES
-       ========================================= */
-    .calendar-container {
-        max-width: 400px;
-        margin: 0 auto 3rem;
-        background: #fff;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .calendar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    .calendar-header button {
-        background: #145214;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 5px;
-        text-align: center;
-    }
-    .weekday {
-        font-weight: bold;
-        font-size: 0.8rem;
-        color: #666;
-        padding-bottom: 5px;
-    }
-    /* Estilos base de estados del calendario */
-    .day.empty { background: transparent; cursor: default; }
-    .day.occupied { background: #ffcccc; color: #a00; cursor: not-allowed; text-decoration: line-through; }
-    .day.selected { background: #145214; color: #fff; }
-    .day.past { background: #eee; color: #ccc; cursor: not-allowed; }
-
-    .calendar-legend {
-        margin-top: 1rem;
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        font-size: 0.8rem;
-    }
-    .legend-item { display: flex; align-items: center; gap: 5px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-    .dot.available { background: #f0f0f0; border: 1px solid #ccc; }
-    .dot.occupied { background: #ffcccc; }
-    .dot.selected { background: #145214; }
-
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #e8f5e9;
-        padding: 2rem 1rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        min-height: 80px;
-    }
-    .checkbox-label {
-        font-weight: 600;
-        color: #145214;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 30px;
-        cursor: pointer;
-        width: 100%;
-        margin-bottom: 0;
-        font-size: 1.2rem;
-        line-height: 1;
-    }
-    .checkbox-label input {
-        width: 25px !important;
-        height: 25px;
-        margin: 0;
-        cursor: pointer;
-        accent-color: #145214;
-    }
-    .info-message {
-        background-color: #f0f4c3;
-        color: #555;
-        padding: 1rem;
-        border-radius: 4px;
-        margin-bottom: 1.5rem;
-        font-size: 0.95rem;
-    }
-    
-    /* Botón Submit */
-    .submit-button {
-      /* Aquí puedes añadir tus estilos base del botón si te faltan, 
-         o heredarán del global.css si tienes */
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .submit-button:disabled {
-        background-color: #94a394;
-        cursor: not-allowed;
-    }
-  `]
+    selector: 'app-reservas',
+    templateUrl: './reservas.component.html',
+    styleUrls: ['./reservas.component.scss']
 })
 export class ReservasComponent implements OnInit {
     reservaForm: FormGroup;
@@ -408,7 +101,7 @@ export class ReservasComponent implements OnInit {
 
                 // 2. Parsear servicios adicionales
                 const tieneServicios = reserva.servicios_adicionales && reserva.servicios_adicionales.includes('Solicitados');
-                
+
                 // 3. Rellenar el formulario
                 this.reservaForm.patchValue({
                     sala_id: reserva.sala_id,
@@ -417,7 +110,7 @@ export class ReservasComponent implements OnInit {
                     numero_asistentes: reserva.numero_asistentes,
                     wantsServices: tieneServicios,
                     // Si tienes lógica para extraer teléfono/email del string, iría aquí
-                    telefono_contacto: '', 
+                    telefono_contacto: '',
                     email_contacto: ''
                 });
 
@@ -586,8 +279,8 @@ export class ReservasComponent implements OnInit {
                     this.loading = false;
                     this.showToast = true;
                     setTimeout(() => {
-                         this.router.navigate(['/mis-reservas']);
-                    }, 3000); 
+                        this.router.navigate(['/mis-reservas']);
+                    }, 3000);
                 },
                 error: (err) => {
                     this.error = err.error?.error || 'Error al actualizar la reserva';
@@ -600,8 +293,8 @@ export class ReservasComponent implements OnInit {
                     this.loading = false;
                     this.showToast = true;
                     setTimeout(() => {
-                         this.router.navigate(['/mis-reservas']);
-                    }, 4000); 
+                        this.router.navigate(['/mis-reservas']);
+                    }, 4000);
                 },
                 error: (err) => {
                     this.error = err.error?.error || 'Error al crear la reserva';

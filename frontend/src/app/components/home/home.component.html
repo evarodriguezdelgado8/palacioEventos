@@ -1,0 +1,35 @@
+<div class="main-container">
+    <section class="principal">
+        <h1>Palacio de Eventos</h1>
+        <h2>Experiencias Inolvidables</h2>
+        <div class="principal-imagen">
+            <!-- Assuming assets exist, otherwise placeholder -->
+            <img src="assets/vistaAerea.png" alt="Palacio Principal">
+        </div>
+    </section>
+
+    <section class="descripcion">
+        <p>
+            En Palacio de Eventos llevamos más de 10 años ofreciendo<br />
+            espacios únicos para la celebración de eventos culturales,<br />
+            corporativos y sociales.
+        </p>
+        <p>
+            Contamos con cuatro salas totalmente equipadas, ubicadas en<br />
+            el corazón de la ciudad, y un equipo especializado que te<br />
+            acompañará en cada detalle.
+        </p>
+        <p>
+            Nuestro objetivo es que cada evento sea una experiencia<br />
+            inolvidable.
+        </p>
+    </section>
+
+    <section class="salas-grid">
+        <div class="sala-tarjeta" *ngFor="let sala of salas" [routerLink]="['/salas', sala.id]">
+            <img [src]="'assets/' + sala.imagen_url" [alt]="sala.nombre"
+                onerror="this.src='https://placehold.co/600x400'">
+            <h3>{{ sala.nombre }}</h3>
+        </div>
+    </section>
+</div>
