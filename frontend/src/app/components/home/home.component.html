@@ -26,10 +26,10 @@
     </section>
 
     <section class="salas-grid">
-        <div class="sala-tarjeta" *ngFor="let sala of salas" [routerLink]="['/salas', sala.id]">
+        <a class="sala-tarjeta" *ngFor="let sala of salas" [routerLink]="['/salas', sala.id]">
             <img [src]="'assets/' + sala.imagen_url" [alt]="sala.nombre"
                 onerror="this.src='https://placehold.co/600x400'">
             <h3>{{ sala.nombre }}</h3>
-        </div>
+        </a>
     </section>
 </div>

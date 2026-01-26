@@ -17,29 +17,47 @@
 
     <div class="calendar-container" *ngIf="sala">
         <div class="calendar-header">
-            <button (click)="prevMonth()">Anterior</button>
-            <h3>{{ currentMonthName }} {{ currentYear }}</h3>
-            <button (click)="nextMonth()">Siguiente</button>
+            <button (click)="prevMonth()" aria-label="Mes anterior">Anterior</button>
+            <!-- Aria-live for month announcement -->
+            <h3 aria-live="polite" aria-atomic="true">{{ currentMonthName }} {{ currentYear }}</h3>
+            <button (click)="nextMonth()" aria-label="Mes siguiente">Siguiente</button>
         </div>
-        <div class="calendar-grid">
-            <div class="weekday">Dom</div>
-            <div class="weekday">Lun</div>
-            <div class="weekday">Mar</div>
-            <div class="weekday">Mié</div>
-            <div class="weekday">Jue</div>
-            <div class="weekday">Vie</div>
-            <div class="weekday">Sáb</div>
 
-            <div *ngFor="let day of calendarDays" class="day" [ngClass]="{
-                'empty': !day, 
-                'occupied': isOccupied(day), 
-                'selected': isSelected(day),
-                'past': isPast(day)
-             }" (click)="selectDate(day)">
-                {{ day }}
+        <div class="calendar-grid" role="grid"
+            [attr.aria-label]="'Calendario de reservas ' + currentMonthName + ' ' + currentYear">
+            <!-- Row for Weekday Headers -->
+            <div class="calendar-row header-row" role="row">
+                <div class="weekday" role="columnheader" aria-label="Domingo">Dom</div>
+                <div class="weekday" role="columnheader" aria-label="Lunes">Lun</div>
+                <div class="weekday" role="columnheader" aria-label="Martes">Mar</div>
+                <div class="weekday" role="columnheader" aria-label="Miércoles">Mié</div>
+                <div class="weekday" role="columnheader" aria-label="Jueves">Jue</div>
+                <div class="weekday" role="columnheader" aria-label="Viernes">Vie</div>
+                <div class="weekday" role="columnheader" aria-label="Sábado">Sáb</div>
+            </div>
+
+            <!-- Rows for Days -->
+            <div class="calendar-row" role="row" *ngFor="let week of calendarWeeks; let w = index">
+                <ng-container *ngFor="let day of week; let d = index">
+
+                    <!-- Padding Cell (Empty) -->
+                    <div *ngIf="day.isPadding" class="day empty" role="gridcell" aria-disabled="true">
+                    </div>
+
+                    <!-- Button Date Cell -->
+                    <button *ngIf="!day.isPadding" #dayBtn type="button" class="day" role="gridcell"
+                        [ngClass]="day.status" [class.selected]="isSelected(day.dateStr)"
+                        [attr.aria-label]="day.fullLabel" [attr.aria-selected]="isSelected(day.dateStr)"
+                        [attr.aria-disabled]="day.status !== 'available'" [tabindex]="getTabindex(day)"
+                        (click)="selectDay(day)" (keydown)="onKeydown($event, day, w, d)">
+                        {{ day.day }}
+                    </button>
+
+                </ng-container>
             </div>
         </div>
-        <div class="calendar-legend">
+
+        <div class="calendar-legend" aria-hidden="true">
             <span class="legend-item"><span class="dot available"></span> Disponible</span>
             <span class="legend-item"><span class="dot occupied"></span> Ocupado</span>
             <span class="legend-item"><span class="dot selected"></span> Seleccionado</span>

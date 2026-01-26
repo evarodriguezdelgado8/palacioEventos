@@ -65,3 +65,44 @@ nav a.active::after {
     /* Restoring original size */
     margin-left: 10px;
 }
+
+/* Accessibility & Semantic Updates */
+a.logo {
+    text-decoration: none;
+    display: flex;
+    /* Ensures SVG and text align correctly */
+    align-items: center;
+}
+
+.btn-logout {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 5px;
+    font-weight: bold;
+    font-family: inherit;
+    /* Inherit font from parent */
+    color: #D32F2F;
+    /* High Contrast Red (WCAG AA Compliant) */
+    text-decoration: underline;
+    /* Visual cue */
+}
+
+.btn-logout:hover {
+    color: #B71C1C;
+    /* Darker red on hover */
+}
+
+.user-menu-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    /* Allows wrapping the div correctly */
+}
+
+/* Ensure Logo text in link doesn't get underlined unless desired, usually logo text is clean */
+a.logo:hover .logo-text {
+    text-decoration: none;
+}
