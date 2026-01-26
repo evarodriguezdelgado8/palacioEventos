@@ -76,7 +76,8 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
     </div>
   `,
   styles: [`
-    /* Solo estilos del bloque de video (no toca tu galería actual) */
+    /* estilos del bloque de video */
+    
     .galeria-video-card {
       margin-top: 24px;
       padding: 18px;
