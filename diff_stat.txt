@@ -1,0 +1,9 @@
+ .../app/components/footer/footer.component.html    |   2 +-
+ .../src/app/components/home/home.component.html    |   4 +-
+ .../app/components/navbar/navbar.component.html    |  28 +--
+ .../app/components/navbar/navbar.component.scss    |  41 +++++
+ .../components/reservas/reservas.component.html    |  58 +++---
+ .../components/reservas/reservas.component.scss    |  29 +++
+ .../app/components/reservas/reservas.component.ts  | 200 +++++++++++++++++----
+ frontend/src/styles.scss                           |  99 ++++++++--
+ 8 files changed, 380 insertions(+), 81 deletions(-)

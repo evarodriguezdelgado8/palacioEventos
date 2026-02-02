@@ -1,7 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservasService } from '../../services/reservas.service';
+
+interface CalendarDay {
+    day: number | null;
+    dateStr: string;
+    isPadding: boolean;
+    status: 'occupied' | 'past' | 'available' | 'padding';
+    fullLabel: string;
+}
 
 @Component({
     selector: 'app-reservas',
@@ -9,6 +17,8 @@ import { ReservasService } from '../../services/reservas.service';
     styleUrls: ['./reservas.component.scss']
 })
 export class ReservasComponent implements OnInit {
+    @ViewChildren('dayBtn') dayButtons!: QueryList<ElementRef>;
+
     reservaForm: FormGroup;
     sala: any;
     loading = false;
@@ -28,8 +38,11 @@ export class ReservasComponent implements OnInit {
     currentDate = new Date();
     currentMonth = this.currentDate.getMonth();
     currentYear = this.currentDate.getFullYear();
-    calendarDays: (number | null)[] = [];
+
+    // Accessibility: Weeks Matrix instead of flat array
+    calendarWeeks: CalendarDay[][] = [];
     monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    monthAnnouncement = ''; // For aria-live region
 
     constructor(
         private formBuilder: FormBuilder,
@@ -51,14 +64,14 @@ export class ReservasComponent implements OnInit {
     ngOnInit() {
         this.generateCalendar();
 
-        // 1. COMPROBAR SI ESTAMOS EDITANDO (Viene por Query Params ?editId=5)
+        // 1. COMPROBAR SI ESTAMOS EDITANDO
         this.route.queryParams.subscribe(params => {
             if (params['editId']) {
                 this.isEditing = true;
                 this.editId = +params['editId'];
                 this.cargarDatosParaEditar(this.editId!);
             } else {
-                // 2. MODO CREACIÓN NORMAL (Viene por URL /reservas/:id)
+                // 2. MODO CREACIÓN NORMAL
                 const salaId = this.route.snapshot.paramMap.get('id');
                 if (salaId) {
                     this.cargarDatosSala(+salaId);
@@ -67,7 +80,7 @@ export class ReservasComponent implements OnInit {
         });
     }
 
-    // Carga los datos de la SALA (capacidad, nombre, etc.)
+    // Carga los datos de la SALA
     cargarDatosSala(salaId: number) {
         this.reservaForm.patchValue({ sala_id: salaId });
         this.reservasService.getSalaById(salaId).subscribe(data => {
@@ -75,7 +88,6 @@ export class ReservasComponent implements OnInit {
             const normalized = this.normalizeSalaName(this.sala.nombre);
             this.minAsistentes = (normalized === 'salaJardin') ? 50 : 20;
 
-            // Si NO estamos editando, ponemos el mínimo por defecto
             if (!this.isEditing) {
                 this.reservaForm.patchValue({ numero_asistentes: this.minAsistentes });
             }
@@ -91,33 +103,26 @@ export class ReservasComponent implements OnInit {
         });
     }
 
-    // Carga los datos de la RESERVA existente y rellena el formulario
+    // Carga los datos de la RESERVA existente
     cargarDatosParaEditar(id: number) {
         this.loading = true;
         this.reservasService.getReservaById(id).subscribe({
             next: (reserva) => {
-                // 1. Primero cargamos la info de la sala
                 this.cargarDatosSala(reserva.sala_id);
-
-                // 2. Parsear servicios adicionales
                 const tieneServicios = reserva.servicios_adicionales && reserva.servicios_adicionales.includes('Solicitados');
 
-                // 3. Rellenar el formulario
                 this.reservaForm.patchValue({
                     sala_id: reserva.sala_id,
                     fecha_evento: reserva.fecha_evento,
                     tipo_evento: reserva.tipo_evento,
                     numero_asistentes: reserva.numero_asistentes,
                     wantsServices: tieneServicios,
-                    // Si tienes lógica para extraer teléfono/email del string, iría aquí
                     telefono_contacto: '',
                     email_contacto: ''
                 });
 
-                // Activar campos de contacto si es necesario
                 this.onServicesToggle();
 
-                // Actualizar calendario visualmente
                 const fechaDate = new Date(reserva.fecha_evento);
                 this.currentMonth = fechaDate.getMonth();
                 this.currentYear = fechaDate.getFullYear();
@@ -179,21 +184,69 @@ export class ReservasComponent implements OnInit {
         });
     }
 
+    updateMonthAnnouncement() {
+        this.monthAnnouncement = `${this.currentMonthName} ${this.currentYear}`;
+    }
+
     generateCalendar() {
         const firstDay = new Date(this.currentYear, this.currentMonth, 1);
         const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
         const daysInMonth = lastDay.getDate();
-        const startDay = firstDay.getDay();
+        const startDay = firstDay.getDay(); // 0 = Sunday
 
-        this.calendarDays = [];
+        const flatDays: CalendarDay[] = [];
 
+        // Padding start
         for (let i = 0; i < startDay; i++) {
-            this.calendarDays.push(null);
+            flatDays.push({ day: null, dateStr: '', isPadding: true, status: 'padding', fullLabel: '' });
         }
 
+        // Days
         for (let i = 1; i <= daysInMonth; i++) {
-            this.calendarDays.push(i);
+            const dateStr = this.formatDate(i);
+            const isOccupied = this.fechasNoDisponibles.includes(dateStr);
+            const isPast = this.checkIsPast(i);
+
+            let status: 'occupied' | 'past' | 'available' = 'available';
+            if (isPast) status = 'past';
+            else if (isOccupied) status = 'occupied';
+
+            // ARIA Label generation
+            const dateObj = new Date(this.currentYear, this.currentMonth, i);
+            const weekdayName = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+            const monthName = this.monthNames[this.currentMonth];
+            const statusText = status === 'occupied' ? 'Ocupado' : (status === 'past' ? 'No disponible' : 'Disponible');
+
+            const fullLabel = `${weekdayName} ${i} de ${monthName}, ${statusText}`;
+
+            flatDays.push({
+                day: i,
+                dateStr: dateStr,
+                isPadding: false,
+                status: status,
+                fullLabel: fullLabel
+            });
         }
+
+        // Chunk into weeks
+        this.calendarWeeks = [];
+        let week: CalendarDay[] = [];
+        for (let i = 0; i < flatDays.length; i++) {
+            week.push(flatDays[i]);
+            if (week.length === 7) {
+                this.calendarWeeks.push(week);
+                week = [];
+            }
+        }
+        if (week.length > 0) {
+            // Fill remaining week with padding
+            while (week.length < 7) {
+                week.push({ day: null, dateStr: '', isPadding: true, status: 'padding', fullLabel: '' });
+            }
+            this.calendarWeeks.push(week);
+        }
+
+        this.updateMonthAnnouncement();
     }
 
     prevMonth() {
@@ -222,36 +275,111 @@ export class ReservasComponent implements OnInit {
         return `${this.currentYear}-${month}-${d}`;
     }
 
-    isOccupied(day: number | null): boolean {
-        if (!day) return false;
-        return this.fechasNoDisponibles.includes(this.formatDate(day));
-    }
-
-    isSelected(day: number | null): boolean {
-        if (!day) return false;
-        return this.reservaForm.get('fecha_evento')?.value === this.formatDate(day);
-    }
-
-    isPast(day: number | null): boolean {
-        if (!day) return false;
+    checkIsPast(day: number): boolean {
         const date = new Date(this.currentYear, this.currentMonth, day);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return date < today;
     }
 
-    selectDate(day: number | null) {
-        if (!day) return;
-        if (this.isOccupied(day) || this.isPast(day)) return;
+    isSelected(dateStr: string): boolean {
+        return this.reservaForm.get('fecha_evento')?.value === dateStr;
+    }
 
-        const dateStr = this.formatDate(day);
-        this.reservaForm.patchValue({ fecha_evento: dateStr });
+    // Keyboard Navigation: Roving Tabindex
+    getTabindex(day: CalendarDay): number {
+        if (day.isPadding) return -1;
+
+        const selectedDate = this.reservaForm.get('fecha_evento')?.value;
+        if (selectedDate && day.dateStr === selectedDate) {
+            return 0;
+        }
+
+        // If no date selected, focus first available day? Or just day 1 if available?
+        // Default logic: If no selection, day 1 is tabindex 0 (handled by focus logic usually)
+        // Simplified: If no selection matches, and it is the first valid day of month?
+        // For roving tabindex perfect implementation, we usually track 'focusedDay' state. 
+        // Here we rely on 'selected' or 'first of month'.
+
+        if (!selectedDate && day.day === 1) return 0;
+
+        return -1;
+    }
+
+    selectDay(day: CalendarDay) {
+        if (day.isPadding || day.status === 'occupied' || day.status === 'past') return;
+        this.reservaForm.patchValue({ fecha_evento: day.dateStr });
         this.fechaOcupada = false;
+    }
+
+    onKeydown(event: KeyboardEvent, day: CalendarDay, weekIndex: number, dayIndex: number) {
+        if (day.isPadding) return;
+
+        const maxWeeks = this.calendarWeeks.length;
+        let nextWeek = weekIndex;
+        let nextDay = dayIndex;
+        let handled = false;
+
+        switch (event.key) {
+            case 'ArrowRight':
+                nextDay++;
+                if (nextDay > 6) { nextDay = 0; nextWeek++; }
+                handled = true;
+                break;
+            case 'ArrowLeft':
+                nextDay--;
+                if (nextDay < 0) { nextDay = 6; nextWeek--; }
+                handled = true;
+                break;
+            case 'ArrowDown':
+                nextWeek++;
+                handled = true;
+                break;
+            case 'ArrowUp':
+                nextWeek--;
+                handled = true;
+                break;
+            case 'Home':
+                // Optional: Move to start of row or month
+                handled = true;
+                break;
+            case 'End':
+                // Optional
+                handled = true;
+                break;
+        }
+
+        if (handled) {
+            event.preventDefault();
+            this.focusDay(nextWeek, nextDay);
+        }
+    }
+
+    focusDay(weekIdx: number, dayIdx: number) {
+        if (weekIdx < 0 || weekIdx >= this.calendarWeeks.length) return; // Out of month
+
+        const targetDay = this.calendarWeeks[weekIdx][dayIdx];
+        if (!targetDay || targetDay.isPadding) {
+            // Try to find nearest valid? Or just abort.
+            // Simplified: If padding, try moving again in direction? 
+            // For now, simple boundary check.
+            return;
+        }
+
+        // Find the button element
+        // We flatten the list of buttons and find index?
+        // Easier: Give IDs or use logic to find index in flattened list.
+        // weekIdx * 7 + dayIdx = flat index (including padding)
+
+        const flatIndex = (weekIdx * 7) + dayIdx;
+        const buttons = this.dayButtons.toArray();
+        if (buttons[flatIndex]) {
+            buttons[flatIndex].nativeElement.focus();
+        }
     }
 
     onSubmit() {
         if (this.reservaForm.invalid || (this.fechaOcupada && !this.isEditing)) {
-            // Esto dispara la validación y activa el CSS "Shake" en los inputs
             this.reservaForm.markAllAsTouched();
             return;
         }
