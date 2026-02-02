@@ -31,13 +31,18 @@ nav a.active::after {
 
 /* Logo SVG Animation */
 .logo-svg-anim {
-    /* Removed global white fill to let image show through */
+    /* SVG Logo embedded as background */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><style>.cls-1{fill:%2388c9a1;}.cls-2{fill:%23000;}</style></defs><g><path class="cls-1" d="M220,180 L220,420 L140,420 L140,240 Z"/><path class="cls-1" d="M372,180 L372,420 L452,420 L452,240 Z"/><rect class="cls-1" x="140" y="400" width="312" height="40"/><path class="cls-2" d="M256,120 L180,200 L180,380 L220,380 L220,240 L292,240 L292,380 L332,380 L332,200 Z"/><path class="cls-2" d="M256,120 L332,200 L372,200 L372,380 L332,380 L332,240 L292,240 L292,380 L220,380 L220,240 L180,240 L180,200 Z"/><rect class="cls-2" x="200" y="260" width="112" height="100"/></g></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
     margin-right: 1rem;
     /* Match original image size roughly to prevent shifts */
     width: 70px;
     height: 70px;
+    display: inline-block;
 }
 
 .logo-svg-anim:hover {
