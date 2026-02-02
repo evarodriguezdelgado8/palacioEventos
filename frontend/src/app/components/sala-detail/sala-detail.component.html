@@ -1,0 +1,44 @@
+<div class="main-container" *ngIf="sala">
+    <!-- Header / Title -->
+    <div class="sala-header">
+        <h1>{{ sala.nombre }}</h1>
+    </div>
+
+    <!-- Image Carousel / Grid -->
+    <div class="sala-images">
+        <img *ngFor="let img of getSalaImages()" [src]="img" [alt]="sala.nombre">
+    </div>
+
+    <!-- Info Section with Enhanced Visuals -->
+    <div class="sala-info-container">
+        <div class="sala-description-card">
+            <h3 class="info-header">Sobre este espacio</h3>
+
+            <div class="info-content-expanded">
+                <p class="intro-text">{{ getExpandedDescription() }}</p>
+                <p class="original-desc">{{ sala.descripcion }}</p>
+
+                <div class="capacity-badge">
+                    <strong>Capacidad:</strong> {{ sala.capacidad }} personas
+                </div>
+
+                <div class="plano-section">
+                    <h4>Distribución y Plano</h4>
+                    <div class="plano-wrapper">
+                        <img [src]="getPlanoImage()" alt="Plano de {{ sala.nombre }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservation Button Area -->
+    <div class="reserva-centro">
+        <button *ngIf="isLoggedIn; else loginToBook" class="reserva-button" (click)="irAReservar()">Reservar
+            Ahora</button>
+        <ng-template #loginToBook>
+            <p class="login-prompt">Inicia sesión para realizar una reserva en este exclusivo espacio.</p>
+            <button class="reserva-button secondary" routerLink="/login">Ir a Login</button>
+        </ng-template>
+    </div>
+</div>

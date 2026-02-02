@@ -1,0 +1,103 @@
+<div *ngIf="toast.show" class="toast-notification" [ngClass]="{'toast-error': toast.isError}">
+    <div class="toast-icon">{{ toast.isError ? '❌' : '✅' }}</div>
+    <div class="toast-content">
+        <div class="toast-title">{{ toast.title }}</div>
+        <div class="toast-message">{{ toast.message }}</div>
+    </div>
+</div>
+
+<div *ngIf="showModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>¿Cancelar Reserva?</h3>
+        <p>Vas a cancelar tu evento en:</p>
+        <h4 style="color: #145214; font-size: 1.3rem; margin: 10px 0;">{{ reservaAEliminar?.nombre_sala }}</h4>
+        <p class="warning-text">⚠️ Esta acción no se puede deshacer.</p>
+
+        <div class="modal-actions">
+            <button class="btn-cancelar-modal" (click)="cerrarModal()">Mantener</button>
+            <button class="btn-confirmar-modal" (click)="confirmarEliminacion()">Sí, Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header-actions">
+        <h1>Mis Reservas</h1>
+        <button class="btn-new" routerLink="/">
+            ➕ Nueva Reserva
+        </button>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+        <div class="spinner"></div> Cargando tus reservas...
+    </div>
+
+    <div *ngIf="!loading && reservas.length === 0" class="empty-state">
+        <div class="empty-icon">📅</div>
+        <h3>No tienes reservas activas</h3>
+        <p>¡Reserva tu sala ideal hoy mismo!</p>
+        <button class="btn-new" routerLink="/">Explorar Salas</button>
+    </div>
+
+    <div class="reservas-grid" *ngIf="!loading && reservas.length > 0">
+
+        <div *ngFor="let reserva of reservas; let i = index" class="reserva-card"
+            [style.animation-delay]="i * 0.1 + 's'">
+
+            <div class="card-header">
+                <span class="sala-name">{{ reserva.nombre_sala || 'Sala del Palacio' }}</span>
+                <span class="fecha-badge">
+                    {{ reserva.fecha_evento | date:'dd MMM yyyy' }}
+                </span>
+            </div>
+
+            <div class="card-body">
+
+                <div class="info-grid-clean">
+
+                    <div class="info-clean-item">
+                        <span class="label-clean">
+                            <span class="icon">🎈</span> Tipo de Evento
+                        </span>
+                        <span class="value-clean">{{ reserva.tipo_evento }}</span>
+                    </div>
+
+                    <div class="vertical-divider"></div>
+
+                    <div class="info-clean-item right-align">
+                        <span class="label-clean">
+                            <span class="icon">👥</span> Asistentes
+                        </span>
+                        <span class="value-clean">{{ reserva.numero_asistentes }} personas</span>
+                    </div>
+
+                </div>
+                <div class="status-row">
+                    <span class="label-simple">Estado:</span>
+                    <span class="status-badge" [ngClass]="reserva.estado">
+                        {{ reserva.estado | uppercase }}
+                    </span>
+                </div>
+
+                <div class="services-section">
+                    <span class="label-simple">Detalles y Servicios:</span>
+                    <div class="services-box"
+                        [ngClass]="{'has-services': reserva.servicios_adicionales && reserva.servicios_adicionales !== 'No solicitados'}">
+                        <p>{{ reserva.servicios_adicionales || 'Sin servicios extra solicitados.' }}</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card-actions">
+                <button class="btn-action edit" (click)="editarReserva(reserva)">
+                    ✏️ Modificar
+                </button>
+                <button class="btn-action delete" (click)="abrirModal(reserva)">
+                    🗑️ Cancelar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

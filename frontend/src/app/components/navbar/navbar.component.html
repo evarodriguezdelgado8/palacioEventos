@@ -1,0 +1,46 @@
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <!-- SVG Logo: Palacio Animado (Image Inside House) -->
+            <svg class="logo-svg-anim" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+                aria-label="Logo Palacio">
+                <!-- 1. The Image (Maximized inside the house area) -->
+                <!-- Adjusted position and size to fill the house frame better -->
+                <image href="assets/iconos/logo-transparent-png.png" x="15" y="25" width="70" height="60"
+                    preserveAspectRatio="xMidYMid meet" />
+
+                <!-- 2. The House Outline (Overlay - No inner details) -->
+                <path fill="none" stroke="#FFFFFF" stroke-width="3" d="M10,80 L10,30 L50,5 L90,30 L90,80 Z" />
+            </svg>
+            <span class="logo-text">Palacio de Eventos</span>
+        </div>
+
+        <div class="user-menu" *ngIf="currentUser; else loginBtn">
+            <span>Hola, {{ currentUser.nombre }}</span>
+            <span (click)="logout()" style="color: red; font-size: 0.8em; margin-left: 5px;">(Salir)</span>
+        </div>
+        <ng-template #loginBtn>
+            <div class="user-menu" routerLink="/login">
+                <!-- SVG Icon: User Animado -->
+                <svg class="user-svg-anim" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28"
+                    aria-label="Usuario">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+            </div>
+        </ng-template>
+    </div>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+        <a routerLink="/informacion-general" routerLinkActive="active">Información</a>
+        <a routerLink="/galeria" routerLinkActive="active">Galería</a>
+        <a routerLink="/salas/1">Sala Real</a>
+        <a routerLink="/salas/2">Sala Modernista</a>
+        <a routerLink="/salas/3">Sala Escénica</a>
+        <a routerLink="/salas/4">Sala Jardín</a>
+        <a routerLink="/mis-reservas" *ngIf="currentUser">Mis Reservas</a>
+    </div>
+</nav>

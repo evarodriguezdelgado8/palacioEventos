@@ -1,0 +1,67 @@
+/* Preparamos el enlace para que la línea se posicione respecto a él */
+nav a {
+    position: relative;
+    text-decoration: none;
+    /* Aseguramos que no haya subrayado por defecto */
+}
+
+/* Dibujamos la línea (invisible inicialmente) */
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    /* Grosor de la línea */
+    bottom: 0;
+    /* Pegada abajo del texto */
+    left: 50%;
+    /* Empieza desde el centro */
+    background-color: #d4af37;
+    /* Color Dorado */
+    transition: all 0.3s ease-in-out;
+    /* Animación suave */
+}
+
+/* Hacemos que la línea crezca al pasar el ratón (Hover) o si está activo */
+nav a:hover::after,
+nav a.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Logo SVG Animation */
+.logo-svg-anim {
+    /* Removed global white fill to let image show through */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    margin-right: 1rem;
+    /* Match original image size roughly to prevent shifts */
+    width: 70px;
+    height: 70px;
+}
+
+.logo-svg-anim:hover {
+    transform: scale(1.15) rotate(5deg);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+}
+
+/* User SVG Animation */
+.user-svg-anim {
+    /* User Menu has white background, so icon must be Dark Green */
+    fill: #145214;
+    transition: all 0.3s ease;
+}
+
+/* When hovering the link container, turn icon Gold */
+.user-menu:hover .user-svg-anim {
+    fill: #FFD700;
+    transform: scale(1.2);
+}
+
+.logo-text {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.4rem;
+    /* Restoring original size */
+    margin-left: 10px;
+}
