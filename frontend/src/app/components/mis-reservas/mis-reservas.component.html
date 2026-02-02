@@ -1,5 +1,5 @@
 <div *ngIf="toast.show" class="toast-notification" [ngClass]="{'toast-error': toast.isError}">
-    <div class="toast-icon">{{ toast.isError ? '❌' : '✅' }}</div>
+    <div class="toast-icon"><span [class]="toast.isError ? 'icon-cross' : 'icon-check'"></span></div>
     <div class="toast-content">
         <div class="toast-title">{{ toast.title }}</div>
         <div class="toast-message">{{ toast.message }}</div>
@@ -11,7 +11,7 @@
         <h3>¿Cancelar Reserva?</h3>
         <p>Vas a cancelar tu evento en:</p>
         <h4 style="color: #145214; font-size: 1.3rem; margin: 10px 0;">{{ reservaAEliminar?.nombre_sala }}</h4>
-        <p class="warning-text">⚠️ Esta acción no se puede deshacer.</p>
+        <p class="warning-text"><span class="icon-warning"></span> Esta acción no se puede deshacer.</p>
 
         <div class="modal-actions">
             <button class="btn-cancelar-modal" (click)="cerrarModal()">Mantener</button>
@@ -24,7 +24,7 @@
     <div class="header-actions">
         <h1>Mis Reservas</h1>
         <button class="btn-new" routerLink="/">
-            ➕ Nueva Reserva
+            <span class="icon-plus"></span> Nueva Reserva
         </button>
     </div>
 
@@ -33,7 +33,7 @@
     </div>
 
     <div *ngIf="!loading && reservas.length === 0" class="empty-state">
-        <div class="empty-icon">📅</div>
+        <div class="empty-icon"><span class="icon-calendar"></span></div>
         <h3>No tienes reservas activas</h3>
         <p>¡Reserva tu sala ideal hoy mismo!</p>
         <button class="btn-new" routerLink="/">Explorar Salas</button>
@@ -57,7 +57,7 @@
 
                     <div class="info-clean-item">
                         <span class="label-clean">
-                            <span class="icon">🎈</span> Tipo de Evento
+                            <span class="icon icon-event"></span> Tipo de Evento
                         </span>
                         <span class="value-clean">{{ reserva.tipo_evento }}</span>
                     </div>
@@ -66,7 +66,7 @@
 
                     <div class="info-clean-item right-align">
                         <span class="label-clean">
-                            <span class="icon">👥</span> Asistentes
+                            <span class="icon icon-people"></span> Asistentes
                         </span>
                         <span class="value-clean">{{ reserva.numero_asistentes }} personas</span>
                     </div>
@@ -91,10 +91,10 @@
 
             <div class="card-actions">
                 <button class="btn-action edit" (click)="editarReserva(reserva)">
-                    ✏️ Modificar
+                    <span class="icon-edit"></span> Modificar
                 </button>
                 <button class="btn-action delete" (click)="abrirModal(reserva)">
-                    🗑️ Cancelar
+                    <span class="icon-trash"></span> Cancelar
                 </button>
             </div>
 

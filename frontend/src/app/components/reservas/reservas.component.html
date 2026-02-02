@@ -1,5 +1,5 @@
 <div *ngIf="showToast" class="toast-notification">
-    <div class="toast-icon">✅</div>
+    <div class="toast-icon"><span class="icon-check"></span></div>
     <div class="toast-content">
         <div class="toast-title">{{ isEditing ? '¡Cambios Guardados!' : '¡Reserva Confirmada!' }}</div>
         <div class="toast-message">{{ isEditing ? 'Tu reserva ha sido actualizada.' : 'Te esperamos en el Palacio.' }}
@@ -102,7 +102,7 @@
 
         <div *ngIf="showContactFields" class="contact-fields-container">
             <p class="info-message">
-                <span class="info-icon">ℹ️</span> Serán contactados para información acerca de servicios adicionales.
+                <span class="info-icon icon-info"></span> Serán contactados para información acerca de servicios adicionales.
             </p>
             <div class="form-group">
                 <label for="telefono_contacto">Teléfono de Contacto</label>
