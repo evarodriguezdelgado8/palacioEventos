@@ -1,3 +1,8 @@
+<app-background-video
+    videoMp4="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-couple-at-their-wedding-4638-large.mp4"
+    videoWebm="https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-couple-at-their-wedding-4638-large.webm">
+</app-background-video>
+
 <div class="main-container">
     <section class="principal">
         <h1>Galería de Imágenes</h1>
@@ -19,10 +24,10 @@
                 <h4 class="galeria-video-title">Vídeo destacado</h4>
 
                 <div class="galeria-video-wrapper" (click)="togglePlay()">
-                    <video #bodaVideo class="galeria-video" preload="metadata" playsinline muted loop
-                        (loadedmetadata)="onLoadedMetadata()" (timeupdate)="onTimeUpdate()">
-                        <source src="assets/videos/bodaEjemplo.webm" type="video/webm" />
-                        <source src="assets/videos/bodaEjemplo.mp4" type="video/mp4" />
+                    <video #bodaVideo class="galeria-video" preload="auto" playsinline muted loop
+                        (loadedmetadata)="onLoadedMetadata()" (timeupdate)="onTimeUpdate()" (ended)="bodaVideo.play()">
+                        <source src="assets/videos/bodaVisor.webm" type="video/webm" />
+                        <source src="assets/videos/bodaVisor.mp4" type="video/mp4" />
                         Tu navegador no soporta vídeo HTML5.
                     </video>
 

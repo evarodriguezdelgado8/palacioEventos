@@ -1,0 +1,23 @@
+<div class="video-background-container">
+    <video #bgVideo autoplay muted loop playsinline preload="auto" (timeupdate)="updateProgress(bgVideo)"
+        (ended)="onVideoEnded()" class="bg-video">
+        <source *ngIf="videoWebm" [src]="videoWebm" type="video/webm">
+        <source *ngIf="videoMp4" [src]="videoMp4" type="video/mp4">
+        Tu navegador no soporta videos.
+    </video>
+    <!-- Overlay para mejorar legibilidad y aplicar el difuminado -->
+    <div class="video-overlay"></div>
+
+    <!-- Controles personalizados para cumplir requisitos académicos -->
+    <div class="custom-controls" *ngIf="showControls">
+        <button (click)="togglePlay(bgVideo)" class="control-btn" aria-label="Play/Pause">
+            {{ isPlaying ? '⏸' : '▶' }}
+        </button>
+        <div class="progress-bar-container">
+            <div class="progress-fill" [style.width.%]="progress"></div>
+        </div>
+        <button (click)="toggleMute(bgVideo)" class="control-btn" aria-label="Mute/Unmute">
+            {{ isMuted ? '🔇' : '🔊' }}
+        </button>
+    </div>
+</div>

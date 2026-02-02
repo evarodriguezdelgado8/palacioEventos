@@ -1,3 +1,21 @@
+<!-- Video Backgrounds -->
+<app-background-video *ngIf="currentSalaName === 'salaReal'" videoMp4="assets/videos/video_Sala_Real.mp4"
+    videoWebm="assets/videos/video_Sala_Real.webm" [showControls]="false">
+</app-background-video>
+
+<app-background-video *ngIf="currentSalaName === 'salaEscenica'" videoMp4="assets/videos/video_Sala_Escenica.mp4"
+    videoWebm="assets/videos/video_Sala_Escenica.webm" [showControls]="false">
+</app-background-video>
+
+<app-background-video *ngIf="currentSalaName === 'salaModernista'"
+    videoMp4="assets/videos/video_Sala_Modernista.mp4?v=final"
+    videoWebm="assets/videos/video_Sala_Modernista.webm?v=final" [showControls]="false">
+</app-background-video>
+
+<app-background-video *ngIf="currentSalaName === 'salaJardin'" videoMp4="assets/videos/video_Sala_Jardin.mp4?v=final"
+    videoWebm="assets/videos/video_Sala_Jardin.webm?v=final" [showControls]="false">
+</app-background-video>
+
 <div class="main-container" *ngIf="sala">
     <!-- Header / Title -->
     <div class="sala-header">

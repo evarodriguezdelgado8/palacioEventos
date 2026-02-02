@@ -32,6 +32,10 @@ export class SalaDetailComponent implements OnInit {
         });
     }
 
+    get currentSalaName(): string {
+        return this.sala ? this.normalizeSalaName(this.sala.nombre) : '';
+    }
+
     irAReservar() {
         this.router.navigate(['/reservar', this.sala.id]);
     }

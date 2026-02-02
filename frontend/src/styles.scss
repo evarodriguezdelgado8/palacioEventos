@@ -32,7 +32,7 @@ body {
   font-size: 1.6rem;
   line-height: 1.6;
   color: var(--color-dark);
-  background-color: #FFFFFF;
+  background-color: transparent;
   padding-top: 15rem;
 }
 
@@ -46,7 +46,8 @@ h6 {
 }
 
 header {
-  background-color: #145214;
+  background-color: rgba(20, 82, 20, 0.85);
+  backdrop-filter: blur(10px);
   padding: 1.5rem 0;
   position: fixed;
   top: 0;
@@ -100,7 +101,8 @@ header {
 }
 
 nav {
-  background-color: #A8D5BA;
+  background-color: rgba(168, 213, 186, 0.8);
+  backdrop-filter: blur(8px);
   padding: 1.2rem 0;
   position: fixed;
   top: 8.5rem;
@@ -182,9 +184,11 @@ nav a.active {
   max-width: 80rem;
   margin: 0 auto 5rem;
   padding: 3rem 2rem;
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
   border-radius: 0.8rem;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .descripcion p {
@@ -230,6 +234,14 @@ nav a.active {
 .salas-grid .sala-tarjeta h3 {
   font-size: 2.2rem;
   color: #145214;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  border-bottom-left-radius: 0.8rem;
+  border-bottom-right-radius: 0.8rem;
+  margin-top: -2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .eventos-section {
@@ -347,10 +359,12 @@ nav a.active {
 }
 
 .sala-info {
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
   padding: 3rem;
   border-radius: 0.8rem;
   margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .info-item {
@@ -526,9 +540,11 @@ nav a.active {
   max-width: 40rem;
   margin: 8rem auto;
   padding: 4rem;
-  background-color: #f9f9f9;
+  background-color: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .login-container h1 {
@@ -583,7 +599,8 @@ nav a.active {
 }
 
 footer {
-  background-color: #c0c0c0;
+  background-color: rgba(192, 192, 192, 0.7);
+  backdrop-filter: blur(10px);
   padding: 3rem 2rem;
   margin-top: auto;
 }

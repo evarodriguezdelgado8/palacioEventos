@@ -16,6 +16,7 @@ import { MisReservasComponent } from './components/mis-reservas/mis-reservas.com
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { InformacionGeneralComponent } from './components/informacion-general/informacion-general.component';
 import { GaleriaComponent } from './components/galeria/galeria.component';
+import { BackgroundVideoComponent } from './components/background-video/background-video.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { GaleriaComponent } from './components/galeria/galeria.component';
     ReservasComponent,
     MisReservasComponent,
     InformacionGeneralComponent,
-    GaleriaComponent
+    GaleriaComponent,
+    BackgroundVideoComponent
   ],
   imports: [
     BrowserModule,
