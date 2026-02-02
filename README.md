@@ -1,74 +1,112 @@
-# PalacioEventos
+# Palacio de Eventos - Gestión Integral de Reservas
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+**Palacio de Eventos** es una aplicación web *Full Stack* diseñada para la gestión y reserva de espacios exclusivos para eventos (bodas, conferencias, teatros). Este proyecto moderniza la experiencia de usuario ofreciendo una interfaz elegante, rápida y totalmente responsive, respaldada por una arquitectura robusta de servidor y base de datos.
 
-## Development server
+Este desarrollo forma parte de la asignatura **Diseño de Interfaces Web** en el **Campus Cámara de Comercio de Sevilla**.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## 🚀 Tecnologías (Tech Stack)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+La aplicación ha sido construida utilizando el stack **MEAN/MERN** (con MySQL), priorizando el rendimiento, la escalabilidad y la mantenibilidad del código.
 
-## Build
+### Frontend (Cliente)
+*   **Framework**: [Angular v16.2.16](https://angular.io/) - SPA (Single Page Application).
+*   **Estilos**: SCSS (Sass) con arquitectura BEM y diseño Responsive.
+*   **Iconografía**: SVG optimizados e integrados vía CSS.
+*   **Comunicación**: Servicios HTTP con Observables (RxJS).
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Backend (Servidor)
+*   **Entorno**: [Node.js](https://nodejs.org/) (Runtime).
+*   **Framework**: [Express.js v4.22](https://expressjs.com/) - API RESTful.
+*   **Seguridad**:
+    *   `jsonwebtoken` (JWT) para autenticación de sesiones.
+    *   `bcryptjs` para el hashing seguro de contraseñas.
+    *   `cors` para gestión de orígenes cruzados.
 
-## Running unit tests
+### Base de Datos
+*   **Motor**: MySQL.
+*   **Driver**: `mysql2` para conexiones asíncronas eficientes.
+*   **Diseño**: Relacional (Usuarios, Salas, Reservas) con integridad referencial.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
+## ✨ Características Principales
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1.  **Catálogo Interactivo**: Visualización dinámica de salas (Real, Modernista, Escénica, Jardín) con imágenes y detalles de capacidad.
+2.  **Motor de Reservas**: Formulario inteligente con validaciones en tiempo real (Reactive Forms) y selector de fechas.
+3.  **Gestión de Usuarios**:
+    *   Registro y Login seguro.
+    *   Panel privado ("Mis Reservas") donde el usuario puede consultar el estado de sus solicitudes.
+4.  **Panel de Administración (Backoffice)**: Funcionalidades CRUD para editar o cancelar reservas (según roles).
+5.  **Experiencia de Usuario (UX)**:
+    *   Notificaciones tipo "Toast" para feedback visual.
+    *   Diseño totalmente adaptado a móviles (Mobile First).
+    *   Cargas asíncronas con feedback visual (Spinners).
 
-## Further help
+---
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-palacio_de_eventos# Palacio de Eventos - Proyecto Web
-Estructura del proyecto
-Este proyecto contiene 9 archivos HTML y 1 archivo CSS:
+## 🛠️ Instalación y Despliegue
 
-Archivos HTML:
-index.html - Página principal con presentación del palacio y enlaces a las salas
-sala-jardin.html - Página de la Sala Jardín (capacidad: 450 personas)
-sala-real.html - Página de la Sala Real (capacidad: 450-800 personas)
-sala-modernista.html - Página de la Sala Modernista (capacidad: 200 personas)
-sala-escenica.html - Página de la Sala Escénica (capacidad: 50 personas)
-galeria.html - Galería de eventos realizados
-informacion-general.html - Información sobre el palacio
-reservas.html - Formulario de reservas
-login.html - Página de inicio de sesión
-Archivo CSS:
-styles.css - Hoja de estilos con todos los diseños
-Colores utilizados (según la presentación):
-Verde oscuro (#145214): Color principal del header y textos destacados
-Verde claro (#A8D5BA): Color secundario para navegación y formularios
-Blanco (#FFFFFF): Fondo principal y textos del header
-Gris (#c0c0c0): Footer
-Características del diseño:
-✅ Sin uso de variables CSS (:root) ✅ Archivo CSS separado ✅ Diseño responsive ✅ Tipografía: Open Sans (12px base) ✅ Navegación sticky ✅ Footer con información de contacto ✅ Formularios con inputs redondeados ✅ Botones con efectos hover
+Sigue estos pasos para desplegar el proyecto en tu entorno local.
 
-Cómo usar:
-Todos los archivos deben estar en la misma carpeta
-Abrir index.html en un navegador
-La navegación funciona entre todas las páginas
-Las imágenes utilizan placeholders SVG (deberás reemplazarlas con imágenes reales)
-Nota sobre las imágenes:
-He usado placeholders SVG en lugar de imágenes reales. Para el proyecto final, deberás:
+### Prerrequisitos
+*   Node.js (v16+ recomendado) y npm.
+*   Servidor MySQL (ej. XAMPP, MySQL Workbench) corriendo en el puerto 3306.
 
-Reemplazar los src de las imágenes con las rutas de tus imágenes reales
-Crear una carpeta images/ y colocar allí todas las imágenes
-Actualizar las rutas en el HTML
-Estructura de navegación:
-index.html (Página Principal)
-├── sala-jardin.html
-├── sala-real.html
-├── sala-modernista.html
-├── sala-escenica.html
-├── informacion-general.html
-├── reservas.html
-├── galeria.html
-└── login.html
+### 1. Base de Datos
+1.  Abre tu gestor de base de datos (phpMyAdmin o Workbench).
+2.  Importa el script `database.sql` ubicado en la raíz del proyecto. Esto creará la BD `palacio_eventos` y las tablas necesarias.
 
-Proyecto desarrollado para: Campus Cámara de Comercio de Sevilla Asignatura: Diseño de Interfaces Web Autores: Fernando Collantes de Terán Gómez, Francisco García Partida, Eva Rodríguez Delgado
+### 2. Backend (API)
+```bash
+cd backend
+npm install        # Instalar dependencias (Express, MySQL, etc.)
+npm start          # Iniciar el servidor (por defecto en puerto 3000)
+```
+*El servidor escuchará en `http://localhost:3000`.*
+
+### 3. Frontend (Angular App)
+En una nueva terminal:
+```bash
+cd frontend
+npm install        # Instalar dependencias de Angular
+npm start          # Arrancar servidor de desarrollo (ng serve)
+```
+*Abre tu navegador en `http://localhost:4200` para ver la aplicación.*
+
+---
+
+## 📂 Estuctura del Proyecto
+
+```
+palacioEventos/
+├── backend/            # Lógica del servidor (Node.js/Express)
+│   ├── controllers/    # Lógica de negocio (endpoint handlers)
+│   ├── routes/         # Definición de rutas API
+│   ├── server.js       # Punto de entrada
+│   └── database.sql    # Script de creación de BD
+│
+├── frontend/           # Aplicación Cliente (Angular)
+│   ├── src/app/
+│   │   ├── components/ # Vistas (Home, Reservas, Navbar...)
+│   │   ├── services/   # Comunicación con Backend
+│   │   └── shared/     # Elementos reutilizables
+│   └── assets/         # Imágenes y recursos estáticos
+│
+└── README.md           # Documentación del proyecto
+```
+
+---
+
+## 👥 Autores
+
+Proyecto desarrollado con ❤️ por:
+
+*   **Fernando Collantes de Terán Gómez**
+*   **Francisco García Partida**
+*   **Eva Rodríguez Delgado**
+
+---
+
+> **Nota**: Este proyecto es de carácter académico. Las imágenes y textos tienen fines demostrativos.
