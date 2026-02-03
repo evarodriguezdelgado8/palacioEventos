@@ -7,8 +7,11 @@
 
 .principal h2 {
     font-family: var(--font-heading) !important;
+    color: var(--color-gold);
+    font-style: italic;
 }
 
+/* --- ESTILOS DEL CONTENEDOR (Se mantienen igual) --- */
 .descripcion {
     border: 1px solid rgba(212, 175, 55, 0.4) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 15px rgba(212, 175, 55, 0.1) !important;
@@ -16,8 +19,9 @@
     transition: transform 0.3s ease;
 }
 
+/* --- ESTILOS GENERALES DE PÁRRAFO --- */
+/* Quitamos el color fijo de aquí para poder cambiarlo individualmente */
 .descripcion p {
-    color: var(--color-gold) !important;
     font-family: var(--font-body) !important;
     line-height: 2 !important;
     margin-bottom: 2.5rem !important;
@@ -25,6 +29,25 @@
     padding-bottom: 1.5rem;
 }
 
+/* --- COLORES POR ORDEN (Black -> Gray -> Gold) --- */
+
+/* 1er Párrafo: Negro (Usamos #222 para suavizarlo como en tu otra página) */
+.descripcion p:nth-of-type(1) {
+    color: #222 !important;
+}
+
+/* 2do Párrafo: Gris (Usamos #555 para coincidir con tus textos descriptivos) */
+.descripcion p:nth-of-type(2) {
+    color: #555 !important;
+}
+
+/* 3er Párrafo: Dorado (Tu variable corporativa) */
+.descripcion p:nth-of-type(3) {
+    color: var(--color-gold) !important;
+}
+
+/* --- LÍNEAS SEPARADORAS --- */
+/* Mantenemos las líneas doradas, pero solo entre párrafos */
 .descripcion p:not(:last-child)::after {
     content: "";
     position: absolute;

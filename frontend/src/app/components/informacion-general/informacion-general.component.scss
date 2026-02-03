@@ -23,7 +23,7 @@
     }
 
     .subtitle {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         color: var(--color-gold);
         font-style: italic;
         margin-bottom: 2rem;
@@ -54,6 +54,7 @@
     .text-container {
         max-width: 800px;
         margin: 0 auto;
+        
     }
 
     .content-section h2 {
@@ -75,7 +76,8 @@
     }
 
     .content-section p {
-        font-size: 1.1rem;
+        font-size: 1.35rem;
+        line-height: 1.8;
         margin-bottom: 1.5rem;
         color: #555;
         text-align: justify;
