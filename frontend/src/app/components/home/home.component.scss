@@ -1,1 +1,49 @@
-/* Styles from pages/home can be added here if needed in future */
+.principal h1 {
+    color: #000000 !important;
+    font-family: var(--font-heading) !important;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.principal h2 {
+    font-family: var(--font-heading) !important;
+}
+
+.descripcion {
+    border: 1px solid rgba(212, 175, 55, 0.4) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 15px rgba(212, 175, 55, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.92) !important;
+    transition: transform 0.3s ease;
+}
+
+.descripcion p {
+    color: var(--color-gold) !important;
+    font-family: var(--font-body) !important;
+    line-height: 2 !important;
+    margin-bottom: 2.5rem !important;
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.descripcion p:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+    opacity: 0.6;
+}
+
+.descripcion p:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0;
+}
+
+
+.salas-grid .sala-tarjeta h3 {
+    color: var(--color-gold) !important;
+    font-family: var(--font-heading) !important;
+}
