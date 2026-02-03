@@ -17,6 +17,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { InformacionGeneralComponent } from './components/informacion-general/informacion-general.component';
 import { GaleriaComponent } from './components/galeria/galeria.component';
 import { BackgroundVideoComponent } from './components/background-video/background-video.component';
+import { FaqComponent } from './components/faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { BackgroundVideoComponent } from './components/background-video/backgrou
     MisReservasComponent,
     InformacionGeneralComponent,
     GaleriaComponent,
-    BackgroundVideoComponent
+    BackgroundVideoComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,

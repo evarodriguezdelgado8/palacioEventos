@@ -1,0 +1,34 @@
+<div class="container-faq">
+    <h1>Preguntas Frecuentes</h1>
+
+    <p class="faq-intro">
+        Resolvemos tus dudas principales sobre las reservas en el Palacio.
+    </p>
+
+    <div class="search-box">
+        <span class="icon-search"></span>
+        <input type="text" placeholder="¿Qué necesitas saber?" (input)="filtrarPreguntas($event)">
+    </div>
+
+    <div class="faq-grid">
+        <div class="faq-item" *ngFor="let item of faqsFiltradas; let i = index" 
+             [class.active]="item.isOpen" 
+             (click)="toggleFaq(i)">
+            
+            <div class="faq-question">
+                <span class="question-text">{{ item.pregunta }}</span>
+                <span class="icon-chevron"></span>
+            </div>
+
+            <div class="faq-answer" [style.max-height]="item.isOpen ? '500px' : '0'">
+                <div class="answer-content">
+                    {{ item.respuesta }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="faqsFiltradas.length === 0" class="empty-search">
+        No encontramos resultados para tu búsqueda.
+    </div>
+</div>

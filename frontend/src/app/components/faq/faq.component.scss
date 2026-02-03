@@ -1,0 +1,150 @@
+/* ================= CONFIGURACIÓN ================= */
+:host {
+    --color-gold: #d4af37;
+    --color-dark: #222222;
+    --bg-light: #f9f9f9;
+    --font-heading: 'Cinzel', serif; 
+    --font-body: 'Lato', sans-serif;
+}
+
+.container-faq {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    font-family: var(--font-body);
+    color: #444;
+}
+
+/* ================= TÍTULO (Igual que Reservas) ================= */
+h1 {
+    font-family: var(--font-heading);
+    color: var(--color-dark);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 1rem 0;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--color-gold);
+}
+
+.faq-intro {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+/* ================= BUSCADOR ================= */
+.search-box {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 15px 15px 15px 50px; /* Espacio para el icono */
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--color-gold);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.icon-search {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23222"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
+    background-repeat: no-repeat;
+}
+
+/* ================= ACORDEÓN ================= */
+.faq-item {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.faq-item:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+/* Estado Activo (Abierto) */
+.faq-item.active {
+    border-color: var(--color-gold);
+}
+
+.faq-item.active .faq-question {
+    background-color: #fafafa;
+    color: var(--color-dark);
+}
+
+.faq-question {
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+.question-text {
+    font-family: var(--font-heading, serif); /* Opcional: Títulos en fuente elegante */
+    letter-spacing: 0.5px;
+}
+
+/* Icono Chevron (Flecha) */
+.icon-chevron {
+    width: 16px;
+    height: 16px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23d4af37"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+}
+
+/* Rotar flecha al abrir */
+.faq-item.active .icon-chevron {
+    transform: rotate(180deg);
+    opacity: 1;
+}
+
+/* ================= RESPUESTA (Animación) ================= */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    background-color: #fff;
+}
+
+.answer-content {
+    padding: 0 30px 30px 30px;
+    line-height: 1.8; 
+    color: #555;
+    font-size: 1.1rem; 
+}
+
+.empty-search {
+    text-align: center;
+    padding: 2rem;
+    color: #999;
+    font-style: italic;
+}

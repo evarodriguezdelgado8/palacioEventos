@@ -9,6 +9,7 @@ import { MisReservasComponent } from './components/mis-reservas/mis-reservas.com
 import { AuthGuard } from './guards/auth.guard';
 import { InformacionGeneralComponent } from './components/informacion-general/informacion-general.component';
 import { GaleriaComponent } from './components/galeria/galeria.component';
+import { FaqComponent } from './components/faq/faq.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'salas/:id', component: SalaDetailComponent },
   { path: 'reservar/:id', component: ReservasComponent, canActivate: [AuthGuard] },
   { path: 'mis-reservas', component: MisReservasComponent, canActivate: [AuthGuard] },
+  { path: 'faq', component: FaqComponent },
   { path: '**', redirectTo: '' }
 ];
 
