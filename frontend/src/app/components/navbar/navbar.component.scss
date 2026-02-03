@@ -1,25 +1,25 @@
+/* ==========================================================================
+   1. TUS ESTILOS ORIGINALES (Logo, Animaciones, Header) - SIN CAMBIOS
+   ========================================================================== */
+
 /* Preparamos el enlace para que la línea se posicione respecto a él */
 nav a {
     position: relative;
     text-decoration: none;
     /* Aseguramos que no haya subrayado por defecto */
+    cursor: pointer; /* Añadido para asegurar usabilidad */
 }
 
-/* Dibujamos la línea (invisible inicialmente) */
+/* Dibujamos la línea (invisible inicialmente) - TU DISEÑO ORIGINAL */
 nav a::after {
     content: '';
     position: absolute;
     width: 0;
     height: 2px;
-    /* Grosor de la línea */
     bottom: 0;
-    /* Pegada abajo del texto */
     left: 50%;
-    /* Empieza desde el centro */
-    background-color: #d4af37;
-    /* Color Dorado */
+    background-color: #d4af37; /* Color Dorado */
     transition: all 0.3s ease-in-out;
-    /* Animación suave */
 }
 
 /* Hacemos que la línea crezca al pasar el ratón (Hover) o si está activo */
@@ -140,7 +140,88 @@ a.logo:hover .logo-text {
     text-decoration: none;
 }
 
-/* Transition for Navigation on Mobile */
+/* ==========================================================================
+   2. CORRECCIÓN: ESTILOS GLOBALES PARA EL MENÚ (ESCRITORIO)
+   Aquí arreglamos que se vea bien en pantalla grande
+   ========================================================================== */
+
+/* Esto asegura que en escritorio estén en fila horizontal */
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; 
+}
+
+/* --- ESTILOS DEL DESPLEGABLE (GLOBALES) --- */
+/* Sacamos esto fuera del @media para que funcione en escritorio */
+.dropdown-container {
+    position: relative;
+    cursor: pointer;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-trigger {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #145214 !important;
+    font-size: 14px;
+}
+
+/* El menú flotante */
+.dropdown-menu {
+    display: none;
+    position: absolute; 
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white; 
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 4px;
+    padding: 5px 0;
+    border-top: 3px solid #d4af37;
+}
+
+/* Mostrar menú al pasar el ratón */
+.dropdown-container:hover .dropdown-menu {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Estilo de los enlaces dentro del dropdown */
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+    color: #d4af37;
+}
+
+/* Quitamos la línea dorada dentro del submenú para que no se vea raro */
+.dropdown-menu a::after {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+
+/* ==========================================================================
+   3. TUS ESTILOS MÓVIL (MEDIA QUERY) - SOLO AJUSTES NECESARIOS
+   ========================================================================== */
+
 nav {
     transition: max-height 0.4s ease-in-out, opacity 0.3s ease;
 }
@@ -148,7 +229,6 @@ nav {
 @media (max-width: 992px) {
     .logo-text {
         display: none;
-        /* Hide text on tablet/mobile to save space */
     }
 
     .menu-toggle {
@@ -172,12 +252,15 @@ nav {
         max-height: 100vh;
         opacity: 1;
         padding: 2rem 0;
+        overflow-y: auto; /* Por si el menú es muy largo */
     }
 
     .nav-container {
-        flex-direction: column;
+        display: flex;
+        flex-direction: column; /* Forzamos columna en móvil */
         align-items: center;
-        gap: 1.5rem !important;
+        justify-content: center;
+        gap: 20px;
     }
 
     nav a {
@@ -189,7 +272,43 @@ nav {
 
     nav a::after {
         display: none;
-        /* Line animation looks weird in mobile menu */
+    }
+    
+    /* --- AJUSTE DESPLEGABLE PARA MÓVIL --- */
+    /* Sobrescribimos para que en móvil no flote, sino que empuje */
+    .dropdown-container {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .dropdown-trigger {
+        font-size: 1.6rem !important; /* Igual que tus otros enlaces */
+        text-align: center;
+        width: 100%;
+        padding: 1.5rem !important;
+        display: block;
+    }
+
+    .dropdown-menu {
+        position: static; /* Ya no flota */
+        transform: none;
+        width: 100%;
+        box-shadow: none;
+        background-color: rgba(0,0,0,0.1); /* Un poco más oscuro */
+        border-top: none;
+        display: none; 
+    }
+    
+    /* En móvil permitimos que se vea al hacer hover/click */
+    .dropdown-container:hover .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-menu a {
+        text-align: center;
+        font-size: 1.4rem !important;
+        padding: 1rem !important;
+        color: inherit; /* Hereda color del móvil */
     }
 }
 
@@ -209,6 +328,5 @@ nav {
 
     .user-menu span {
         display: none;
-        /* Hide 'Hola, Nombre' on very small screens */
     }
 }

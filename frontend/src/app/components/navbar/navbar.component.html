@@ -39,14 +39,21 @@
 <nav [class.open]="isMenuOpen">
     <div class="nav-container">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="isMenuOpen = false">Inicio</a>
+        
         <a routerLink="/informacion-general" routerLinkActive="active" (click)="isMenuOpen = false">Información</a>
+        <a routerLink="/faq" routerLinkActive="active" (click)="isMenuOpen = false">Preguntas Frecuentes</a>
         <a routerLink="/galeria" routerLinkActive="active" (click)="isMenuOpen = false">Galería</a>
-        
-        <a routerLink="/salas/1" routerLinkActive="active" (click)="isMenuOpen = false">Sala Real</a>
-        <a routerLink="/salas/2" routerLinkActive="active" (click)="isMenuOpen = false">Sala Modernista</a>
-        <a routerLink="/salas/3" routerLinkActive="active" (click)="isMenuOpen = false">Sala Escénica</a>
-        <a routerLink="/salas/4" routerLinkActive="active" (click)="isMenuOpen = false">Sala Jardín</a>
-        
+
+        <div class="dropdown-container">
+            <span class="dropdown-trigger">Nuestras Salas ▾</span>
+            <div class="dropdown-menu">
+                <a routerLink="/salas/1" (click)="isMenuOpen = false">Sala Real</a>
+                <a routerLink="/salas/2" (click)="isMenuOpen = false">Sala Modernista</a>
+                <a routerLink="/salas/3" (click)="isMenuOpen = false">Sala Escénica</a>
+                <a routerLink="/salas/4" (click)="isMenuOpen = false">Sala Jardín</a>
+            </div>
+        </div>
+
         <a routerLink="/mis-reservas" routerLinkActive="active" *ngIf="currentUser" (click)="isMenuOpen = false">Mis Reservas</a>
     </div>
 </nav>
