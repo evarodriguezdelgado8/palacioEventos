@@ -29,35 +29,72 @@ nav a.active::after {
     left: 0;
 }
 
-/* Logo SVG Animation */
-.logo-svg-anim {
-    /* SVG Logo embedded as background */
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><style>.cls-1{fill:%2388c9a1;}.cls-2{fill:%23000;}</style></defs><g><path class="cls-1" d="M220,180 L220,420 L140,420 L140,240 Z"/><path class="cls-1" d="M372,180 L372,420 L452,420 L452,240 Z"/><rect class="cls-1" x="140" y="400" width="312" height="40"/><path class="cls-2" d="M256,120 L180,200 L180,380 L220,380 L220,240 L292,240 L292,380 L332,380 L332,200 Z"/><path class="cls-2" d="M256,120 L332,200 L372,200 L372,380 L332,380 L332,240 L292,240 L292,380 L220,380 L220,240 L180,240 L180,200 Z"/><rect class="cls-2" x="200" y="260" width="112" height="100"/></g></svg>');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+/* Logo Styles */
+.logo-img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
-    margin-right: 1rem;
-    /* Match original image size roughly to prevent shifts */
-    width: 70px;
-    height: 70px;
-    display: inline-block;
 }
 
-.logo-svg-anim:hover {
-    transform: scale(1.15) rotate(5deg);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+.logo-img:hover {
+    transform: scale(1.1) rotate(2deg);
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Hamburger Menu Icon */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1rem;
+    z-index: 1001;
+}
+
+.hamburger {
+    width: 30px;
+    height: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hamburger span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+}
+
+.hamburger.open span:nth-child(1) {
+    transform: translateY(8.5px) rotate(45deg);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-8.5px) rotate(-45deg);
 }
 
 /* User SVG Animation */
 .user-svg-anim {
-    /* User Menu has white background, so icon must be Dark Green */
     fill: #145214;
     transition: all 0.3s ease;
 }
 
-/* When hovering the link container, turn icon Gold */
 .user-menu:hover .user-svg-anim {
     fill: #FFD700;
     transform: scale(1.2);
@@ -67,15 +104,12 @@ nav a.active::after {
     color: #fff;
     font-weight: bold;
     font-size: 1.4rem;
-    /* Restoring original size */
     margin-left: 10px;
 }
 
-/* Accessibility & Semantic Updates */
 a.logo {
     text-decoration: none;
     display: flex;
-    /* Ensures SVG and text align correctly */
     align-items: center;
 }
 
@@ -88,26 +122,93 @@ a.logo {
     margin-left: 5px;
     font-weight: bold;
     font-family: inherit;
-    /* Inherit font from parent */
     color: #D32F2F;
-    /* High Contrast Red (WCAG AA Compliant) */
     text-decoration: underline;
-    /* Visual cue */
 }
 
 .btn-logout:hover {
     color: #B71C1C;
-    /* Darker red on hover */
 }
 
 .user-menu-link {
     text-decoration: none;
     color: inherit;
     display: block;
-    /* Allows wrapping the div correctly */
 }
 
-/* Ensure Logo text in link doesn't get underlined unless desired, usually logo text is clean */
 a.logo:hover .logo-text {
     text-decoration: none;
+}
+
+/* Transition for Navigation on Mobile */
+nav {
+    transition: max-height 0.4s ease-in-out, opacity 0.3s ease;
+}
+
+@media (max-width: 992px) {
+    .logo-text {
+        display: none;
+        /* Hide text on tablet/mobile to save space */
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    nav {
+        position: fixed;
+        top: 8.5rem;
+        left: 0;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        background-color: rgba(168, 213, 186, 0.98);
+        flex-direction: column;
+        z-index: 998;
+    }
+
+    nav.open {
+        max-height: 100vh;
+        opacity: 1;
+        padding: 2rem 0;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem !important;
+    }
+
+    nav a {
+        font-size: 1.6rem !important;
+        width: 100%;
+        text-align: center;
+        padding: 1.5rem !important;
+    }
+
+    nav a::after {
+        display: none;
+        /* Line animation looks weird in mobile menu */
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-img {
+        height: 50px;
+    }
+
+    .header-container {
+        padding: 0 1rem;
+    }
+
+    .user-menu {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.8rem;
+    }
+
+    .user-menu span {
+        display: none;
+        /* Hide 'Hola, Nombre' on very small screens */
+    }
 }

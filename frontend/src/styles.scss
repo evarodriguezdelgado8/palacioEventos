@@ -204,7 +204,7 @@ nav a.active {
 
 .salas-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 4rem;
   margin-bottom: 6rem;
 }
@@ -221,7 +221,6 @@ nav a.active {
   transform: translateY(-0.5rem);
 }
 
-/* Removed .salas-grid .sala-tarjeta a as the card itself is now the link */
 .salas-grid .sala-tarjeta img {
   width: 100%;
   height: 30rem;
@@ -242,6 +241,13 @@ nav a.active {
   margin-top: -2rem;
   position: relative;
   z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .salas-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
 }
 
 .eventos-section {
@@ -268,7 +274,7 @@ nav a.active {
 
 .eventos-section .eventos-gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
@@ -284,6 +290,25 @@ nav a.active {
 .eventos-section .eventos-gallery img:hover {
   transform: translateY(-1rem);
 }
+
+@media (max-width: 768px) {
+  .eventos-section .eventos-gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
+.principal h1 {
+  font-size: clamp(3rem, 8vw, 4.8rem);
+}
+
+.principal h2 {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+}
+
+.descripcion {
+  padding: clamp(1.5rem, 5vw, 3rem);
+}
+
 
 .cta-text {
   text-align: center;
@@ -306,7 +331,7 @@ nav a.active {
 
 .sala-images {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-bottom: 4rem;
 }
@@ -322,6 +347,12 @@ nav a.active {
 
 .sala-images img:hover {
   transform: translateY(-1rem);
+}
+
+@media (max-width: 768px) {
+  .sala-images {
+    grid-template-columns: 1fr;
+  }
 }
 
 .reserva-centro {
@@ -358,13 +389,10 @@ nav a.active {
   box-shadow: none;
 }
 
-.sala-info {
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  padding: 3rem;
-  border-radius: 0.8rem;
-  margin-bottom: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.sala-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .info-item {
@@ -440,106 +468,12 @@ nav a.active {
   box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.15);
 }
 
+.login-container,
 .reservas-container {
-  max-width: 70rem;
-  margin: 0 auto;
-}
-
-.reservas-container h1 {
-  text-align: center;
-  font-size: 3.8rem;
-  color: #145214;
-  margin-bottom: 2rem;
-}
-
-.reservas-container .reservas-intro {
-  text-align: center;
-  font-size: 1.4rem;
-  color: #666;
-  margin-bottom: 4rem;
-}
-
-.reservas-container .form-section {
-  margin-bottom: 3.5rem;
-}
-
-.reservas-container .form-section h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-}
-
-.reservas-container .form-group {
-  margin-bottom: 2rem;
-}
-
-.reservas-container .form-group label {
-  display: block;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.8rem;
-}
-
-.reservas-container .form-group input,
-.reservas-container .form-group select,
-.reservas-container .form-group textarea {
-  width: 100%;
-  padding: 1.2rem 1.5rem;
-  border: none;
-  background-color: #A8D5BA;
-  border-radius: 2.5rem;
-  font-size: 1.4rem;
-  font-family: "Open Sans", Arial, sans-serif;
-  color: #333;
-}
-
-.reservas-container .form-group input:focus,
-.reservas-container .form-group select:focus,
-.reservas-container .form-group textarea:focus {
-  outline: 0.2rem solid #0d3a0d;
-}
-
-.reservas-container .form-group textarea {
-  resize: vertical;
-  min-height: 8rem;
-  border-radius: 1.5rem;
-}
-
-.reservas-container .submit-button {
-  display: block;
-  width: 20rem;
-  margin: 4rem auto 0;
-  background-color: #A8D5BA;
-  color: #333;
-  padding: 1.5rem 4rem;
-  border: none;
-  border-radius: 2.5rem;
-  font-size: 1.6rem;
-  font-weight: 700;
-  text-transform: capitalize;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.reservas-container .submit-button:hover {
-  background-color: #145214;
-  color: #FFFFFF;
-  transform: translateY(-0.2rem);
-}
-
-.reservas-container .submit-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.login-container {
-  max-width: 40rem;
-  margin: 8rem auto;
-  padding: 4rem;
+  width: 95%;
+  max-width: 50rem;
+  margin: 4rem auto;
+  padding: clamp(2rem, 5vw, 4rem);
   background-color: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(10px);
   border-radius: 1rem;
@@ -547,18 +481,19 @@ nav a.active {
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.login-container h1 {
+.login-container h1,
+.reservas-container h1 {
   text-align: center;
   font-size: 3.2rem;
   color: #145214;
   margin-bottom: 3rem;
 }
 
-.login-container .login-form .form-group {
+.form-group {
   margin-bottom: 2rem;
 }
 
-.login-container .login-form .form-group label {
+.form-group label {
   display: block;
   font-size: 1.4rem;
   font-weight: 600;
@@ -566,22 +501,27 @@ nav a.active {
   margin-bottom: 0.8rem;
 }
 
-.login-container .login-form .form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 1.2rem 1.5rem;
   border: none;
   background-color: #A8D5BA;
   border-radius: 2.5rem;
   font-size: 1.4rem;
-  font-family: "Open Sans", Arial, sans-serif;
+  font-family: inherit;
   color: #333;
 }
 
-.login-container .login-form .form-group input:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   outline: 0.2rem solid #0d3a0d;
 }
 
-.login-container .login-button {
+.login-button,
+.submit-button {
   width: 100%;
   background-color: #145214;
   color: #FFFFFF;
@@ -594,9 +534,26 @@ nav a.active {
   transition: all 0.3s ease;
 }
 
-.login-container .login-button:hover {
+.login-button:hover,
+.submit-button:hover {
   background-color: #0d3a0d;
 }
+
+@media (max-width: 480px) {
+
+  .login-container h1,
+  .reservas-container h1 {
+    font-size: 2.4rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 1.4rem;
+    padding: 1rem;
+  }
+}
+
 
 footer {
   background-color: rgba(192, 192, 192, 0.7);

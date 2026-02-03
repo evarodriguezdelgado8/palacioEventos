@@ -6,6 +6,12 @@
     background: rgba(0, 0, 0, 0.04);
 }
 
+.eventos-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
 .galeria-video-title {
     margin: 0 0 12px;
     text-align: center;
@@ -18,6 +24,8 @@
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .galeria-video {

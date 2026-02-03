@@ -9,12 +9,18 @@ import { AuthService } from '../../services/auth.service';
 })
 export class NavbarComponent {
   currentUser: any;
+  isMenuOpen = false;
 
   constructor(private authService: AuthService) {
     this.authService.currentUser.subscribe((x: any) => this.currentUser = x);
   }
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   logout() {
     this.authService.logout();
+    this.isMenuOpen = false;
   }
 }
