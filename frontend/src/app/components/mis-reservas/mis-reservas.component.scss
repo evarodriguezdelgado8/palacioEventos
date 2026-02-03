@@ -1,186 +1,107 @@
-/* ================= TOAST & MODAL ================= */
-.toast-notification {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    background-color: #145214;
-    color: white;
-    border: 2px solid white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    z-index: 2000;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    animation: slideInToast 0.5s forwards;
-}
-
-.toast-error {
-    background-color: #d32f2f;
-}
-
-@keyframes slideInToast {
-    from {
-        transform: translateX(120%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1500;
-}
-
-.modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popIn {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.warning-text {
-    color: #d32f2f;
-    background: #ffebee;
-    padding: 8px;
-    border-radius: 4px;
-    display: inline-block;
-    margin-top: 10px;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.btn-cancelar-modal,
-.btn-confirmar-modal {
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.btn-cancelar-modal {
-    background: #f0f0f0;
-    color: #333;
-}
-
-.btn-confirmar-modal {
-    background: #d32f2f;
-    color: white;
+/* ================= VARIABLES Y CONFIGURACIÓN GENERAL ================= */
+:host {
+    --color-gold: #d4af37;
+    --color-gold-hover: #bfa34b;
+    --color-dark: #222222;
+    --color-text-grey: #555555;
+    --bg-light: #fcfcfc;
+    --font-heading: 'Cinzel', serif; /* Asegúrate de que coincida con tu fuente global */
+    --font-body: 'Lato', sans-serif; /* Asegúrate de que coincida con tu fuente global */
 }
 
 /* ================= MAIN LAYOUT ================= */
 .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 2rem;
-}
-
-.reservas-container {
-    padding: 2.5rem;
+    padding: 3rem 2rem;
+    font-family: var(--font-body, sans-serif);
 }
 
 .header-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2.5rem;
-    border-bottom: 3px solid #145214;
-    padding-bottom: 1rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid #e0e0e0; /* Línea gris suave */
+    padding-bottom: 1.5rem;
 }
 
 h1 {
-    color: #145214;
+    color: var(--color-dark);
     margin: 0;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    font-family: var(--font-heading, serif);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 400;
 }
 
+/* Botón Nueva Reserva (Estilo Dorado) */
 .btn-new {
-    background-color: #145214;
+    background-color: var(--color-gold);
     color: white;
     border: none;
-    padding: 12px 25px;
-    border-radius: 50px;
-    font-weight: bold;
+    padding: 12px 30px;
+    border-radius: 4px; /* Bordes menos redondeados para ser más elegante */
+    font-weight: 600;
     cursor: pointer;
     text-decoration: none;
-    transition: 0.2s;
-    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .btn-new:hover {
     transform: translateY(-2px);
-    background-color: #1e701e;
+    background-color: var(--color-gold-hover);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
+/* ================= ESTADO VACÍO Y CARGA ================= */
 .empty-state {
     text-align: center;
-    padding: 4rem;
-    background: #f9f9f9;
-    border-radius: 12px;
-    border: 2px dashed #ccc;
+    padding: 5rem 2rem;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+}
+
+.empty-state h3 {
+    font-family: var(--font-heading, serif);
+    color: var(--color-dark);
+    margin-top: 1rem;
 }
 
 .loading {
     text-align: center;
     margin-top: 3rem;
+    color: var(--color-text-grey);
+    font-style: italic;
 }
 
 .spinner {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 3px solid rgba(20, 82, 20, 0.3);
+    border: 2px solid rgba(212, 175, 55, 0.3); /* Dorado suave */
     border-radius: 50%;
-    border-top-color: #145214;
+    border-top-color: var(--color-gold);
     animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin-right: 10px;
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
-/* ================= CARD DESIGN ================= */
+/* ================= DISEÑO DE TARJETAS (CARD) ================= */
 .reservas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -189,10 +110,10 @@ h1 {
 
 .reserva-card {
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     overflow: hidden;
-    border: 1px solid #eee;
+    border: 1px solid rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
@@ -200,62 +121,61 @@ h1 {
 }
 
 @keyframes slideInCard {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .reserva-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
 }
 
-/* Header Tarjeta */
+/* Header Tarjeta - AHORA OSCURO Y DORADO */
 .card-header {
-    background: linear-gradient(135deg, #145214 0%, #2a6e2a 100%);
+    background: var(--color-dark);
     color: white;
     padding: 20px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 3px solid var(--color-gold);
 }
 
 .sala-name {
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 1.2rem;
+    font-family: var(--font-heading, serif);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-gold);
 }
 
 .fecha-badge {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
     font-weight: 500;
-    backdrop-filter: blur(5px);
+    letter-spacing: 0.5px;
 }
 
 /* Cuerpo Tarjeta */
 .card-body {
-    padding: 25px;
+    padding: 30px;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* --- ESTILO NUEVO PARA TIPO/ASISTENTES (SIN BORDES) --- */
+/* Info Grid Clean */
 .info-grid-clean {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 2px solid #f0f0f0;
 }
 
 .info-clean-item {
@@ -270,144 +190,269 @@ h1 {
 }
 
 .vertical-divider {
-    width: 1px;
-    height: 40px;
-    background-color: #eee;
-    margin: 0 20px;
+    width: 2px; 
+    height: 60px; 
+    background-color: #e0e0e0;
+    margin: 0 30px;
 }
 
 .label-clean {
-    font-size: 0.8rem;
-    color: #888;
+    font-size: 0.9rem; 
+    color: #444;       
     text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
+    font-weight: 700;  
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    opacity: 1; 
 }
 
-/* El span right-align necesita justificar el contenido del label a la derecha si usamos flex */
 .right-align .label-clean {
     justify-content: flex-end;
 }
 
 .icon {
-    font-size: 1rem;
-    filter: grayscale(100%);
-    opacity: 0.7;
+    font-size: 1.1rem;
+    color: var(--color-gold);
+    opacity: 1;
 }
 
 .value-clean {
-    font-size: 1.4rem;
-    /* Texto grande */
-    color: #222;
-    font-weight: 600;
-    line-height: 1.2;
+    font-size: 2rem; 
+    color: var(--color-dark); 
+    font-family: var(--font-heading, serif); 
+    font-weight: 500;
+    line-height: 1.1;
 }
 
-/* ----------------------------------------------------- */
-
+/* Estado y Servicios */
 .status-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    background: #fdfdfd;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid #eee;
 }
 
 .label-simple {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: #666;
     font-weight: 600;
 }
 
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 0.95rem;
     font-weight: 800;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .status-badge.confirmada {
     background: #e8f5e9;
-    color: #2e7d32;
+    color: #1b5e20;
+    border: 1px solid #c8e6c9;
 }
 
 .status-badge.pendiente {
-    background: #fff3e0;
-    color: #f57c00;
+    background: #fff8e1;
+    color: #b78900;      
+    border: 1px solid #ffe082;
 }
 
 .services-section {
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .services-box {
     background: #fafafa;
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #666;
-    border-left: 4px solid #ddd;
-    white-space: pre-wrap;
-    line-height: 1.5;
-    margin-top: 8px;
+    padding: 18px;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #444;
+    border-left: 4px solid #ccc;
+    line-height: 1.6;
 }
 
 .services-box.has-services {
-    background: #f1f8e9;
-    color: #33691e;
-    border-left-color: #558b2f;
+    background: #fdfcf5; /* Fondo crema muy suave */
+    color: #5d4037;
+    border-left-color: var(--color-gold);
 }
 
-/* Footer / Botones */
+/* Botones de Acción en Tarjeta */
 .card-actions {
-    padding: 15px 25px;
+    padding: 20px 30px;
     background: #fcfcfc;
     border-top: 1px solid #eee;
     display: flex;
-    gap: 15px;
+    gap: 20px;
 }
 
 .btn-action {
     flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: 0.2s;
+    padding: 14px; /* Botones más altos */
+    font-size: 0.95rem; /* Texto más grande */
+    letter-spacing: 1.5px;
 }
 
 .edit {
-    background: #e3f2fd;
-    color: #1565c0;
+    background: white;
+    border-color: #ccc;
+    color: #555;
 }
 
 .edit:hover {
-    background: #bbdefb;
-    transform: translateY(-2px);
+    border-color: var(--color-dark);
+    color: var(--color-dark);
+    background: #f5f5f5;
 }
 
 .delete {
-    background: #ffebee;
+    background: white;
+    border-color: #ffcdd2;
     color: #c62828;
 }
 
 .delete:hover {
-    background: #ffcdd2;
-    transform: translateY(-2px);
+    background: #c62828;
+    color: white;
+    border-color: #c62828;
+}
+
+/* ================= TOAST & MODAL ================= */
+.toast-notification {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background-color: var(--color-dark); /* Fondo oscuro */
+    color: white;
+    border-left: 5px solid var(--color-gold); /* Detalle dorado */
+    padding: 15px 25px;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: slideInToast 0.5s forwards;
+}
+
+.toast-error {
+    background-color: #d32f2f;
+    border-left: 5px solid #ff8a80;
+}
+
+@keyframes slideInToast {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+}
+
+.modal-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-content h3 {
+    font-family: var(--font-heading, serif);
+    color: var(--color-dark);
+    margin-top: 0;
+}
+
+/* Clase específica para el título de la sala en el modal */
+.modal-sala-title {
+    color: var(--color-gold);
+    font-size: 1.4rem;
+    margin: 15px 0;
+    font-family: var(--font-heading, serif);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.warning-text {
+    color: #c62828;
+    background: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-cancelar-modal,
+.btn-confirmar-modal {
+    padding: 12px 25px;
+    border-radius: 4px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    transition: 0.2s;
+}
+
+.btn-cancelar-modal {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-cancelar-modal:hover {
+    background: #e0e0e0;
+}
+
+.btn-confirmar-modal {
+    background: #d32f2f;
+    color: white;
+}
+
+.btn-confirmar-modal:hover {
+    background: #b71c1c;
 }
 
 /* ================= SVG ICONS ================= */
-/* Calendar Icon */
+/* Se mantienen igual pero se ajustan tamaños para el nuevo diseño */
+
 .icon-calendar {
     display: inline-block;
     width: 1em;
@@ -418,7 +463,6 @@ h1 {
     background-position: center;
 }
 
-/* Plus Icon */
 .icon-plus {
     display: inline-block;
     width: 1em;
@@ -429,7 +473,6 @@ h1 {
     background-position: center;
 }
 
-/* Checkmark Icon */
 .icon-check {
     display: inline-block;
     width: 1em;
@@ -440,7 +483,6 @@ h1 {
     background-position: center;
 }
 
-/* Cross/X Icon */
 .icon-cross {
     display: inline-block;
     width: 1em;
@@ -451,7 +493,6 @@ h1 {
     background-position: center;
 }
 
-/* Warning Icon */
 .icon-warning {
     display: inline-block;
     width: 1em;
@@ -462,40 +503,36 @@ h1 {
     background-position: center;
 }
 
-/* Balloon/Event Icon */
 .icon-event {
     display: inline-block;
     width: 1em;
     height: 1em;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23888"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-/* People/Group Icon */
 .icon-people {
     display: inline-block;
     width: 1em;
     height: 1em;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23888"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-/* Edit/Pencil Icon */
 .icon-edit {
     display: inline-block;
     width: 1em;
     height: 1em;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%231565c0"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23555"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-/* Trash/Delete Icon */
 .icon-trash {
     display: inline-block;
     width: 1em;
@@ -506,41 +543,30 @@ h1 {
     background-position: center;
 }
 
-/* Info Icon */
-.icon-info {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* Update empty-icon to use larger size */
 .empty-icon {
     font-size: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 1rem;
-
-    .icon-calendar {
-        width: 3rem;
-        height: 3rem;
-    }
 }
 
-/* Update toast icon size */
+.empty-icon .icon-calendar {
+    width: 3rem;
+    height: 3rem;
+    opacity: 0.2;
+}
+
 .toast-icon {
     font-size: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    .icon-check,
-    .icon-cross {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
 }
+
+.toast-icon .icon-check,
+.toast-icon .icon-cross {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+

@@ -1,3 +1,35 @@
+/* ================= VARIABLES DE ESTILO (LUJO) ================= */
+:host {
+    --color-gold: #d4af37;
+    --font-heading: 'Cinzel', serif; /* Asegúrate de importar esta fuente en tu index.html */
+    --color-dark: #222222;
+}
+
+/* ================= TÍTULO ESTILO "INFORMACIÓN GENERAL" ================= */
+.reservas-container h1 {
+    font-family: var(--font-heading, serif);
+    color: var(--color-dark);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 400;
+    margin: 0 0 2rem 0;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--color-gold); /* La línea dorada característica */
+    width: 100%;
+    text-align: left; /* Alineado a la izquierda como suele ser ese estilo */
+}
+
+/* ================= TU CSS EXISTENTE (MANTENIDO IGUAL) ================= */
+.reservas-container {
+    /* ... resto de tu código ... */
+    max-width: 800px; /* Sugerencia: Limitar ancho para que el título no se vea eterno */
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+
+
 /* =========================================
    BLOQUE C: MICROINTERACCIONES
    ========================================= */

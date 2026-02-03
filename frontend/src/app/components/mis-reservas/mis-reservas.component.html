@@ -10,7 +10,9 @@
     <div class="modal-content">
         <h3>¿Cancelar Reserva?</h3>
         <p>Vas a cancelar tu evento en:</p>
-        <h4 style="color: #145214; font-size: 1.3rem; margin: 10px 0;">{{ reservaAEliminar?.nombre_sala }}</h4>
+        
+        <h4 class="modal-sala-title">{{ reservaAEliminar?.nombre_sala }}</h4>
+        
         <p class="warning-text"><span class="icon-warning"></span> Esta acción no se puede deshacer.</p>
 
         <div class="modal-actions">
@@ -40,10 +42,7 @@
     </div>
 
     <div class="reservas-grid" *ngIf="!loading && reservas.length > 0">
-
-        <div *ngFor="let reserva of reservas; let i = index" class="reserva-card"
-            [style.animation-delay]="i * 0.1 + 's'">
-
+        <div *ngFor="let reserva of reservas; let i = index" class="reserva-card" [style.animation-delay]="i * 0.1 + 's'">
             <div class="card-header">
                 <span class="sala-name">{{ reserva.nombre_sala || 'Sala del Palacio' }}</span>
                 <span class="fecha-badge">
@@ -52,9 +51,7 @@
             </div>
 
             <div class="card-body">
-
                 <div class="info-grid-clean">
-
                     <div class="info-clean-item">
                         <span class="label-clean">
                             <span class="icon icon-event"></span> Tipo de Evento
@@ -70,8 +67,8 @@
                         </span>
                         <span class="value-clean">{{ reserva.numero_asistentes }} personas</span>
                     </div>
-
                 </div>
+
                 <div class="status-row">
                     <span class="label-simple">Estado:</span>
                     <span class="status-badge" [ngClass]="reserva.estado">
@@ -81,12 +78,10 @@
 
                 <div class="services-section">
                     <span class="label-simple">Detalles y Servicios:</span>
-                    <div class="services-box"
-                        [ngClass]="{'has-services': reserva.servicios_adicionales && reserva.servicios_adicionales !== 'No solicitados'}">
+                    <div class="services-box" [ngClass]="{'has-services': reserva.servicios_adicionales && reserva.servicios_adicionales !== 'No solicitados'}">
                         <p>{{ reserva.servicios_adicionales || 'Sin servicios extra solicitados.' }}</p>
                     </div>
                 </div>
-
             </div>
 
             <div class="card-actions">
@@ -97,7 +92,6 @@
                     <span class="icon-trash"></span> Cancelar
                 </button>
             </div>
-
         </div>
     </div>
 </div>
